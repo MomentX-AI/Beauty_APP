@@ -88,6 +88,35 @@ class AuthService {
     return false;
   }
 
+  // 註冊
+  static Future<bool> register({
+    required String name,
+    required String email,
+    required String password,
+    required String businessName,
+  }) async {
+    // TODO: Implement actual API call
+    // For now, just simulate a successful registration
+    await Future.delayed(const Duration(seconds: 1));
+    
+    // 檢查電子郵件是否已經被使用
+    if (_mockUsers.containsKey(email)) {
+      // 在實際應用中，這裡應該拋出一個錯誤，或者返回詳細的失敗原因
+      return false;
+    }
+    
+    // 在模擬環境中添加新用戶
+    _mockUsers[email] = {
+      'email': email,
+      'password': password,
+      'name': name,
+      'businessName': businessName,
+      'role': 'admin', // 所有新註冊用戶默認為管理員角色
+    };
+    
+    return true;
+  }
+
   // 登出
   static Future<void> logout() async {
     // TODO: Implement actual API call

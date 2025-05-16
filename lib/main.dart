@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/login_screen.dart';
+import 'screens/register_screen.dart';
 import 'screens/dashboard_screen.dart';
 import 'services/auth_service.dart';
 import 'services/mock_api_service.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
       initialRoute: AuthService.isLoggedIn ? '/dashboard' : '/login',
       routes: {
         '/login': (context) => const LoginScreen(),
+        '/register': (context) => const RegisterScreen(),
         '/dashboard': (context) => DashboardScreen(businessId: defaultBusinessId),
       },
     );

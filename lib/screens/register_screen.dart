@@ -1,43 +1,54 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
-import 'register_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  final _businessNameController = TextEditingController();
   bool _isLoading = false;
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _businessNameController.dispose();
     super.dispose();
   }
 
-  Future<void> _login() async {
+  Future<void> _register() async {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isLoading = true);
 
     try {
-      final success = await AuthService.login(
-        _emailController.text,
-        _passwordController.text,
+      final success = await AuthService.register(
+        name: _nameController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
+        businessName: _businessNameController.text,
       );
 
       if (success && mounted) {
-        Navigator.of(context).pushReplacementNamed('/dashboard');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('註冊成功！請登入您的帳號')),
+        );
+        // 返回登入頁面
+        Navigator.of(context).pop();
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('登入失敗，請檢查帳號密碼')),
+          const SnackBar(content: Text('註冊失敗，請稍後再試')),
         );
       }
     } catch (e) {
@@ -56,6 +67,11 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('註冊帳號'),
+        backgroundColor: Colors.pink,
+        foregroundColor: Colors.white,
+      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -97,16 +113,50 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 8),
                     const Text(
-                      '歡迎回來！請登入您的帳號',
+                      '建立您的帳號，開始美業管理之旅',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.grey,
                       ),
                     ),
-                    const SizedBox(height: 48),
+                    const SizedBox(height: 32),
 
-                    // 登入表單
+                    // 註冊表單
+                    TextFormField(
+                      controller: _nameController,
+                      decoration: InputDecoration(
+                        labelText: '姓名',
+                        prefixIcon: const Icon(Icons.person),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return '請輸入姓名';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _businessNameController,
+                      decoration: InputDecoration(
+                        labelText: '店家名稱',
+                        prefixIcon: const Icon(Icons.store),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return '請輸入店家名稱';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
                     TextFormField(
                       controller: _emailController,
                       decoration: InputDecoration(
@@ -148,11 +198,32 @@ class _LoginScreenState extends State<LoginScreen> {
                         return null;
                       },
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _confirmPasswordController,
+                      decoration: InputDecoration(
+                        labelText: '確認密碼',
+                        prefixIcon: const Icon(Icons.lock_outline),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      obscureText: true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return '請再次輸入密碼';
+                        }
+                        if (value != _passwordController.text) {
+                          return '兩次輸入的密碼不一致';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 32),
 
-                    // 登入按鈕
+                    // 註冊按鈕
                     ElevatedButton(
-                      onPressed: _isLoading ? null : _login,
+                      onPressed: _isLoading ? null : _register,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
@@ -170,7 +241,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             )
                           : const Text(
-                              '登入',
+                              '註冊',
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.white,
@@ -178,57 +249,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                     ),
                     const SizedBox(height: 16),
-
-                    // 測試帳號提示
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.blue.shade50,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.blue.shade200),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            '測試帳號：',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text('管理員：admin@beauty.com / 123456'),
-                          Text('員工：staff@beauty.com / 123456'),
-                        ],
-                      ),
-                    ),
                     
-                    const SizedBox(height: 24),
-                    
-                    // 註冊按鈕
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('還沒有帳號？'),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const RegisterScreen(),
-                              ),
-                            );
-                          },
-                          child: const Text(
-                            '立即註冊',
-                            style: TextStyle(
-                              color: Colors.pink,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
+                    // 返回登入按鈕
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text(
+                        '已有帳號？返回登入',
+                        style: TextStyle(color: Colors.pink),
+                      ),
                     ),
                   ],
                 ),
