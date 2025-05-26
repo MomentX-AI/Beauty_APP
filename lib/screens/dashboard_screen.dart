@@ -6,6 +6,7 @@ import 'customer_screen.dart';
 import 'service_screen.dart';
 import 'appointment_screen.dart';
 import 'ai_assistant_screen.dart';
+import 'dashboard_home_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   final String businessId;
@@ -19,13 +20,13 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   bool _isSidebarCollapsed = false;
   final List<Map<String, dynamic>> _menuItems = [
-    {'icon': 'AI', 'title': 'AI 美業助理', 'isSelected': true},
-    {'icon': '設', 'title': '主理人資料', 'isSelected': false},
-    {'icon': '預', 'title': '預約服務', 'isSelected': false},
-    {'icon': '服', 'title': '服務內容設定', 'isSelected': false},
-    {'icon': '客', 'title': '客戶資料', 'isSelected': false},
-    {'icon': '報', 'title': '經營報表', 'isSelected': false},
-    {'icon': '設', 'title': '系統設定', 'isSelected': false},
+    {'icon': '儀', 'title': '儀表板', 'isSelected': true},
+    {'icon': '預', 'title': '預約管理', 'isSelected': false},
+    {'icon': '客', 'title': '客戶管理', 'isSelected': false},
+    {'icon': '服', 'title': '服務管理', 'isSelected': false},
+    {'icon': '報', 'title': '業務分析報告', 'isSelected': false},
+    {'icon': 'AI', 'title': 'AI 助理', 'isSelected': false},
+    {'icon': '用', 'title': '用戶管理', 'isSelected': false},
   ];
 
   void _selectMenuItem(int index) {
@@ -38,28 +39,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _getCurrentPage() {
     final selectedIndex = _menuItems.indexWhere((item) => item['isSelected']);
-    // 如果沒有選中的菜單項，默認顯示 AI 美業助理頁面
     if (selectedIndex == -1) {
-      return const AIAssistantScreen();
+      return const DashboardHomeScreen();
     }
     
     switch (selectedIndex) {
       case 0:
-        return const AIAssistantScreen();
+        return const DashboardHomeScreen();
       case 1:
-        return const OwnerProfileScreen();
+        return AppointmentScreen(businessId: widget.businessId);
       case 2:
-        return const AppointmentScreen();
+        return const CustomerScreen();
       case 3:
         return ServiceScreen(businessId: widget.businessId);
       case 4:
-        return const CustomerScreen();
-      case 5:
         return const ReportsScreen();
+      case 5:
+        return const AIAssistantScreen();
+      case 6:
+        return const OwnerProfileScreen();
       default:
-        return Center(
-          child: Text('${_menuItems[selectedIndex]['title']}（待實現）'),
-        );
+        return const DashboardHomeScreen();
     }
   }
 
@@ -93,16 +93,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
+                                fontWeight: FontWeight.bold,
                               ),
-                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ),
                       IconButton(
                         icon: Icon(
-                          _isSidebarCollapsed
-                              ? Icons.chevron_right
-                              : Icons.chevron_left,
+                          _isSidebarCollapsed ? Icons.menu_open : Icons.menu,
                           color: Colors.white,
                         ),
                         onPressed: () {
@@ -110,52 +108,44 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             _isSidebarCollapsed = !_isSidebarCollapsed;
                           });
                         },
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
                       ),
                     ],
                   ),
                 ),
                 // 用戶信息
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 20,
-                        backgroundColor: const Color(0xFF6C5CE7),
-                        child: Text(
-                          AuthService.userName?[0] ?? 'U',
-                          style: const TextStyle(color: Colors.white),
+                if (!_isSidebarCollapsed)
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        const CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.white,
+                          child: Icon(Icons.person, color: Color(0xFF6C5CE7)),
                         ),
-                      ),
-                      if (!_isSidebarCollapsed) ...[
                         const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                AuthService.userName ?? '用戶',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              AuthService.userName ?? '用戶',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
                               ),
-                              const Text(
-                                '主理人',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 12,
-                                ),
+                            ),
+                            const Text(
+                              '主理人',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 12,
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ],
-                    ],
+                    ),
                   ),
-                ),
                 // 選單項目
                 Expanded(
                   child: ListView.builder(

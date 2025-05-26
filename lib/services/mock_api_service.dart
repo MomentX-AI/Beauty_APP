@@ -278,7 +278,41 @@ class MockApiService {
   // Business Goal API
   Future<List<BusinessGoal>> getBusinessGoals(String businessId) async {
     await Future.delayed(const Duration(milliseconds: 500));
-    return MockDataService.getMockBusinessGoals(businessId);
+    return [
+      BusinessGoal(
+        id: '1',
+        businessId: businessId,
+        title: '本月營收目標',
+        currentValue: 128500,
+        targetValue: 150000,
+        unit: '元',
+        startDate: DateTime(2024, 3, 1),
+        endDate: DateTime(2024, 3, 31),
+        type: GoalType.revenue,
+      ),
+      BusinessGoal(
+        id: '2',
+        businessId: businessId,
+        title: '本月預約目標',
+        currentValue: 156,
+        targetValue: 200,
+        unit: '次',
+        startDate: DateTime(2024, 3, 1),
+        endDate: DateTime(2024, 3, 31),
+        type: GoalType.service_count,
+      ),
+      BusinessGoal(
+        id: '3',
+        businessId: businessId,
+        title: '本月新增客戶目標',
+        currentValue: 28,
+        targetValue: 40,
+        unit: '人',
+        startDate: DateTime(2024, 3, 1),
+        endDate: DateTime(2024, 3, 31),
+        type: GoalType.customer_count,
+      ),
+    ];
   }
   
   Future<BusinessGoal> createBusinessGoal(BusinessGoal goal) async {

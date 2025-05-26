@@ -3,6 +3,8 @@ import '../models/service.dart';
 import '../services/mock_api_service.dart';
 import '../widgets/service_list_tile.dart';
 import '../widgets/service_form_dialog.dart';
+import '../models/business.dart';
+import 'business_list_screen.dart';
 
 class ServiceScreen extends StatefulWidget {
   final String businessId;
@@ -16,7 +18,8 @@ class ServiceScreen extends StatefulWidget {
   State<ServiceScreen> createState() => _ServiceScreenState();
 }
 
-class _ServiceScreenState extends State<ServiceScreen> {
+class _ServiceScreenState extends State<ServiceScreen> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
   ServiceCategory _selectedCategory = ServiceCategory.hair;
   String _searchQuery = '';
   String _sortBy = '價格';
@@ -30,25 +33,20 @@ class _ServiceScreenState extends State<ServiceScreen> {
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 4, vsync: this);
     _loadServices();
   }
 
   @override
   void dispose() {
+    _tabController.dispose();
     _searchController.dispose();
     super.dispose();
   }
 
   Future<void> _loadServices() async {
-    setState(() {
-      _isLoading = true;
-    });
-
     try {
-      final services = await _apiService.getBusinessServices(
-        widget.businessId,
-        includeArchived: _includeArchived
-      );
+      final services = await _apiService.getBusinessServices(widget.businessId);
       setState(() {
         _services = services;
         _isLoading = false;
@@ -59,7 +57,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
       });
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading services: $e')),
+          SnackBar(content: Text('載入服務失敗：$e')),
         );
       }
     }
@@ -72,16 +70,17 @@ class _ServiceScreenState extends State<ServiceScreen> {
         businessId: widget.businessId,
         onSave: (service) async {
           try {
-            final createdService = await _apiService.createService(service);
-            setState(() {
-              _services = [..._services, createdService];
-            });
+            await _apiService.createService(service);
             if (mounted) {
-              Navigator.of(context).pop();
-              _showSuccessMessage('新增服務成功');
+              Navigator.pop(context);
+              _loadServices();
             }
           } catch (e) {
-            _showErrorMessage('新增服務失敗: $e');
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('新增服務失敗：$e')),
+              );
+            }
           }
         },
       ),
@@ -205,195 +204,48 @@ class _ServiceScreenState extends State<ServiceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('服務內容設定'),
-        actions: [
-          // 包含已存檔選項
-          Switch(
-            value: _includeArchived,
-            onChanged: (value) {
-              _toggleArchived();
-            },
-          ),
-          const Text('顯示已存檔'),
-          const SizedBox(width: 16),
-          
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => _showAddServiceDialog(context),
-          ),
-        ],
+        title: const Text('服務管理'),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(text: '服務項目'),
+            Tab(text: '商家設定'),
+            Tab(text: '分店設定'),
+            Tab(text: '特殊營業日'),
+          ],
+        ),
       ),
-      body: _isLoading 
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
+      body: TabBarView(
+        controller: _tabController,
         children: [
-          // 服務類別頁籤
-          Container(
-            height: 40,
-            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                ...ServiceCategory.values.map((category) {
-                  final isSelected = category == _selectedCategory;
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _selectedCategory = category;
-                      });
-                    },
-                    child: Container(
-                      width: 100,
-                      margin: const EdgeInsets.only(right: 10),
-                      decoration: BoxDecoration(
-                        color: isSelected ? const Color(0xFF6C5CE7) : Colors.white,
-                        border: Border.all(
-                          color: isSelected ? const Color(0xFF6C5CE7) : Colors.grey.shade300,
-                        ),
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(3),
-                          topRight: Radius.circular(3),
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          category.displayName,
-                          style: TextStyle(
-                            color: isSelected ? Colors.white : Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList(),
-                // 新增類別按鈕
-                Container(
-                  width: 40,
-                  margin: const EdgeInsets.only(right: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.grey.shade300),
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(3),
-                      topRight: Radius.circular(3),
-                    ),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      '+',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // 工具列
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: Row(
-              children: [
-                // 搜尋框
-                Expanded(
-                  child: Container(
-                    height: 30,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: TextField(
-                      controller: _searchController,
-                      decoration: const InputDecoration(
-                        hintText: '搜尋服務項目...',
-                        prefixIcon: Icon(Icons.search, size: 20),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          _searchQuery = value;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 20),
-                // 排序
-                const Text('排序:'),
-                const SizedBox(width: 8),
-                Container(
-                  width: 120,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.grey.shade300),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: DropdownButton<String>(
-                    value: _sortBy,
-                    isExpanded: true,
-                    underline: const SizedBox(),
-                    items: const [
-                      DropdownMenuItem(value: '價格', child: Text('價格')),
-                      DropdownMenuItem(value: '利潤', child: Text('利潤')),
-                      DropdownMenuItem(value: '時間', child: Text('所需時間')),
-                    ],
-                    onChanged: (value) {
-                      if (value != null) {
-                        setState(() {
-                          _sortBy = value;
-                        });
-                      }
-                    },
-                  ),
-                ),
-                const SizedBox(width: 8),
-                IconButton(
-                  icon: Icon(_sortAscending ? Icons.arrow_upward : Icons.arrow_downward),
-                  onPressed: () {
-                    setState(() {
-                      _sortAscending = !_sortAscending;
-                    });
+          // 服務項目
+          _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : ListView.builder(
+                  itemCount: _services.length,
+                  itemBuilder: (context, index) {
+                    final service = _services[index];
+                    return ListTile(
+                      title: Text(service.name),
+                      subtitle: Text(service.description ?? ''),
+                      trailing: Text('¥${service.price}'),
+                    );
                   },
                 ),
-                const SizedBox(width: 20),
-                // 新增服務按鈕
-                ElevatedButton(
-                  onPressed: () => _showAddServiceDialog(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF6C5CE7),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
-                  child: const Text('+ 新增服務'),
-                ),
-              ],
-            ),
-          ),
-          // 服務列表
-          Expanded(
-            child: _filteredServices.isEmpty
-                ? const Center(child: Text('沒有符合條件的服務項目'))
-                : ListView.builder(
-              itemCount: _filteredServices.length,
-              itemBuilder: (context, index) {
-                final service = _filteredServices[index];
-                return ServiceListTile(
-                  service: service,
-                  onEdit: () => _showEditServiceDialog(context, service),
-                  onDelete: () => _showDeleteConfirmationDialog(context, service),
-                );
-              },
-            ),
-          ),
+          // 商家設定
+          const BusinessListScreen(),
+          // 分店設定
+          const Center(child: Text('分店設定（待實現）')),
+          // 特殊營業日
+          const Center(child: Text('特殊營業日（待實現）')),
         ],
       ),
+      floatingActionButton: _tabController.index == 0
+          ? FloatingActionButton(
+              onPressed: () => _showAddServiceDialog(context),
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 } 
