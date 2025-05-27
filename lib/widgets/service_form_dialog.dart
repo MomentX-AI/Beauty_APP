@@ -88,13 +88,15 @@ class _ServiceFormDialogState extends State<ServiceFormDialog> {
     return Dialog(
       child: Container(
         width: 500,
+        constraints: const BoxConstraints(maxHeight: 600),
         padding: const EdgeInsets.all(24),
         child: Form(
           key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
               // 標題
               Text(
                 widget.service == null ? '新增服務項目' : '編輯服務項目',
@@ -270,7 +272,8 @@ class _ServiceFormDialogState extends State<ServiceFormDialog> {
                   ),
                 ],
               ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // 使用默認的商業 ID 作為測試
-    const String defaultBusinessId = 'business_001';
+    const String defaultBusinessId = '1';
     
     return MaterialApp(
       title: '美容管理系統',

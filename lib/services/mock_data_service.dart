@@ -5,39 +5,170 @@ import '../models/customer.dart';
 import '../models/service_history.dart';
 import '../models/business_goal.dart';
 import '../models/business_analysis.dart';
+import '../models/branch.dart';
+import '../models/branch_special_day.dart';
+import '../models/branch_service.dart';
 
 class MockDataService {
-  // Mock business data
+  // Mock businesses data
   static List<Business> getMockBusinesses() {
     return [
       Business(
         id: '1',
-        name: '美髮沙龍',
-        description: '專業的美髮服務，提供剪髮、染髮、燙髮等服務',
-        address: '台北市信義區松高路123號',
+        name: '王小美髮廊',
+        description: '專業美髮服務',
+        address: '台北市中山區美髮路123號',
         phone: '02-2345-6789',
-        email: 'salon@example.com',
+        email: 'wanghairsalon@example.com',
         logoUrl: 'https://picsum.photos/200',
-        socialLinks: '{"facebook": "https://facebook.com/salon", "instagram": "https://instagram.com/salon"}',
+        socialLinks: '{"facebook": "wanghairsalon", "instagram": "wanghairsalon"}',
         taxId: '12345678',
-      ),
-      Business(
-        id: '2',
-        name: '美容SPA',
-        description: '提供專業的美容護理和SPA服務',
-        address: '台北市大安區忠孝東路456號',
-        phone: '02-3456-7890',
-        email: 'spa@example.com',
-        logoUrl: 'https://picsum.photos/201',
-        socialLinks: '{"facebook": "https://facebook.com/spa", "instagram": "https://instagram.com/spa"}',
-        taxId: '87654321',
+        timezone: 'Asia/Taipei',
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       ),
     ];
+  }
+
+  // Mock branches data
+  static List<Branch> getMockBranches(String? businessId) {
+    return [
+      Branch(
+        id: '1',
+        businessId: businessId ?? '1',
+        name: '總店',
+        contactPhone: '02-2345-6789',
+        address: '台北市中山區美髮路123號',
+        isDefault: true,
+        status: 'active',
+        operatingHoursStart: '10:00',
+        operatingHoursEnd: '20:00',
+        createdAt: DateTime.now().subtract(const Duration(days: 30)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 30)),
+      ),
+      Branch(
+        id: '2',
+        businessId: businessId ?? '1',
+        name: '信義門店',
+        contactPhone: '02-2765-4321',
+        address: '台北市信義區信義路456號',
+        isDefault: false,
+        status: 'active',
+        operatingHoursStart: '11:00',
+        operatingHoursEnd: '21:00',
+        createdAt: DateTime.now().subtract(const Duration(days: 20)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 20)),
+      ),
+      Branch(
+        id: '3',
+        businessId: businessId ?? '1',
+        name: '西門門店',
+        contactPhone: '02-2388-9999',
+        address: '台北市萬華區西門路789號',
+        isDefault: false,
+        status: 'active',
+        operatingHoursStart: '12:00',
+        operatingHoursEnd: '22:00',
+        createdAt: DateTime.now().subtract(const Duration(days: 10)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 10)),
+      ),
+      Branch(
+        id: '4',
+        businessId: businessId ?? '1',
+        name: '板橋門店',
+        contactPhone: '02-2960-1234',
+        address: '新北市板橋區文化路321號',
+        isDefault: false,
+        status: 'active',
+        operatingHoursStart: '10:30',
+        operatingHoursEnd: '20:30',
+        createdAt: DateTime.now().subtract(const Duration(days: 15)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 15)),
+      ),
+      Branch(
+        id: '5',
+        businessId: businessId ?? '1',
+        name: '天母門店',
+        contactPhone: '02-2871-5678',
+        address: '台北市士林區天母東路567號',
+        isDefault: false,
+        status: 'active',
+        operatingHoursStart: '11:00',
+        operatingHoursEnd: '21:00',
+        createdAt: DateTime.now().subtract(const Duration(days: 8)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 8)),
+      ),
+      Branch(
+        id: '6',
+        businessId: businessId ?? '1',
+        name: '內湖門店',
+        contactPhone: '02-2627-8901',
+        address: '台北市內湖區成功路四段890號',
+        isDefault: false,
+        status: 'active',
+        operatingHoursStart: '10:00',
+        operatingHoursEnd: '20:00',
+        createdAt: DateTime.now().subtract(const Duration(days: 5)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 5)),
+      ),
+    ];
+  }
+
+  // Mock branch special days data
+  static List<BranchSpecialDay> getMockBranchSpecialDays(String branchId, {DateTime? date}) {
+    final now = DateTime.now();
+    final allSpecialDays = [
+      BranchSpecialDay(
+        id: '1',
+        branchId: '1',
+        date: DateTime(now.year, now.month + 1, 1), // 下個月1號
+        isOpen: false,
+        operatingHoursStart: null,
+        operatingHoursEnd: null,
+        reason: '元旦假期',
+        createdAt: now,
+        updatedAt: now,
+      ),
+      BranchSpecialDay(
+        id: '2',
+        branchId: '1',
+        date: DateTime(now.year, now.month, 25), // 本月25號
+        isOpen: true,
+        operatingHoursStart: '14:00',
+        operatingHoursEnd: '18:00',
+        reason: '聖誕節特別營業',
+        createdAt: now,
+        updatedAt: now,
+      ),
+      BranchSpecialDay(
+        id: '3',
+        branchId: '2',
+        date: DateTime(now.year, now.month + 1, 15), // 下個月15號
+        isOpen: false,
+        operatingHoursStart: null,
+        operatingHoursEnd: null,
+        reason: '員工培訓日',
+        createdAt: now,
+        updatedAt: now,
+      ),
+    ];
+
+    // Filter by branch ID and date if provided
+    var filtered = allSpecialDays.where((day) => day.branchId == branchId);
+    if (date != null) {
+      filtered = filtered.where((day) => 
+        day.date.year == date.year &&
+        day.date.month == date.month &&
+        day.date.day == date.day
+      );
+    }
+    return filtered.toList();
   }
 
   // Mock services data
   static List<Service> getMockServices() {
     return [
+      // 美髮服務
       Service(
         id: '1',
         businessId: '1',
@@ -103,7 +234,446 @@ class MockDataService {
         createdAt: DateTime.now().subtract(const Duration(days: 30)),
         updatedAt: DateTime.now().subtract(const Duration(days: 30)),
       ),
+      Service(
+        id: '6',
+        businessId: '1',
+        name: '洗剪吹',
+        category: ServiceCategory.hair,
+        duration: 90,
+        revisitPeriod: 45,
+        price: 1500,
+        profit: 1000,
+        description: '包含洗髮、剪髮、吹整的完整服務',
+        createdAt: DateTime.now().subtract(const Duration(days: 25)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 25)),
+      ),
+      Service(
+        id: '7',
+        businessId: '1',
+        name: '染髮',
+        category: ServiceCategory.hair,
+        duration: 120,
+        revisitPeriod: 90,
+        price: 2500,
+        profit: 1500,
+        description: '專業染髮服務，包含護髮',
+        createdAt: DateTime.now().subtract(const Duration(days: 25)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 25)),
+      ),
+      Service(
+        id: '8',
+        businessId: '1',
+        name: '燙髮',
+        category: ServiceCategory.hair,
+        duration: 180,
+        revisitPeriod: 120,
+        price: 3500,
+        profit: 2200,
+        description: '專業燙髮服務，包含護髮',
+        createdAt: DateTime.now().subtract(const Duration(days: 25)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 25)),
+      ),
+      Service(
+        id: '9',
+        businessId: '1',
+        name: '深層護髮',
+        category: ServiceCategory.hair,
+        duration: 60,
+        revisitPeriod: 30,
+        price: 800,
+        profit: 500,
+        description: '深層滋養護髮療程',
+        createdAt: DateTime.now().subtract(const Duration(days: 20)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 20)),
+      ),
+
+      // 美甲服務
+      Service(
+        id: '10',
+        businessId: '1',
+        name: '基礎美甲',
+        category: ServiceCategory.nail,
+        duration: 60,
+        revisitPeriod: 21,
+        price: 800,
+        profit: 500,
+        description: '基礎指甲修護與上色',
+        createdAt: DateTime.now().subtract(const Duration(days: 20)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 20)),
+      ),
+      Service(
+        id: '11',
+        businessId: '1',
+        name: '凝膠美甲',
+        category: ServiceCategory.nail,
+        duration: 90,
+        revisitPeriod: 28,
+        price: 1200,
+        profit: 800,
+        description: '持久凝膠美甲，可維持3-4週',
+        createdAt: DateTime.now().subtract(const Duration(days: 20)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 20)),
+      ),
+      Service(
+        id: '12',
+        businessId: '1',
+        name: '光療美甲',
+        category: ServiceCategory.nail,
+        duration: 120,
+        revisitPeriod: 35,
+        price: 1800,
+        profit: 1200,
+        description: '專業光療美甲，持久亮麗',
+        createdAt: DateTime.now().subtract(const Duration(days: 18)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 18)),
+      ),
+      Service(
+        id: '13',
+        businessId: '1',
+        name: '手部護理',
+        category: ServiceCategory.nail,
+        duration: 45,
+        revisitPeriod: 14,
+        price: 600,
+        profit: 400,
+        description: '手部深層護理與保養',
+        createdAt: DateTime.now().subtract(const Duration(days: 18)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 18)),
+      ),
+
+      // 睫毛服務
+      Service(
+        id: '14',
+        businessId: '1',
+        name: '睫毛嫁接',
+        category: ServiceCategory.lash,
+        duration: 120,
+        revisitPeriod: 21,
+        price: 2000,
+        profit: 1300,
+        description: '專業睫毛嫁接，自然濃密',
+        createdAt: DateTime.now().subtract(const Duration(days: 15)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 15)),
+      ),
+      Service(
+        id: '15',
+        businessId: '1',
+        name: '睫毛補接',
+        category: ServiceCategory.lash,
+        duration: 60,
+        revisitPeriod: 14,
+        price: 800,
+        profit: 500,
+        description: '睫毛補接維護服務',
+        createdAt: DateTime.now().subtract(const Duration(days: 15)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 15)),
+      ),
+      Service(
+        id: '16',
+        businessId: '1',
+        name: '睫毛燙翹',
+        category: ServiceCategory.lash,
+        duration: 90,
+        revisitPeriod: 45,
+        price: 1200,
+        profit: 800,
+        description: '自然睫毛燙翹服務',
+        createdAt: DateTime.now().subtract(const Duration(days: 12)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 12)),
+      ),
+
+      // 美容護膚服務
+      Service(
+        id: '17',
+        businessId: '1',
+        name: '基礎清潔護膚',
+        category: ServiceCategory.skin,
+        duration: 60,
+        revisitPeriod: 14,
+        price: 1000,
+        profit: 650,
+        description: '深層清潔與基礎護膚',
+        createdAt: DateTime.now().subtract(const Duration(days: 12)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 12)),
+      ),
+      Service(
+        id: '18',
+        businessId: '1',
+        name: '保濕補水護膚',
+        category: ServiceCategory.skin,
+        duration: 90,
+        revisitPeriod: 21,
+        price: 1500,
+        profit: 1000,
+        description: '深層保濕補水護膚療程',
+        createdAt: DateTime.now().subtract(const Duration(days: 10)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 10)),
+      ),
+      Service(
+        id: '19',
+        businessId: '1',
+        name: '抗老緊緻護膚',
+        category: ServiceCategory.skin,
+        duration: 120,
+        revisitPeriod: 28,
+        price: 2500,
+        profit: 1600,
+        description: '抗老緊緻專業護膚療程',
+        createdAt: DateTime.now().subtract(const Duration(days: 10)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 10)),
+      ),
+      Service(
+        id: '20',
+        businessId: '1',
+        name: '痘痘肌護理',
+        category: ServiceCategory.skin,
+        duration: 75,
+        revisitPeriod: 14,
+        price: 1200,
+        profit: 800,
+        description: '專門針對痘痘肌的護理療程',
+        createdAt: DateTime.now().subtract(const Duration(days: 8)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 8)),
+      ),
+
+      // 半永久化妝服務
+      Service(
+        id: '21',
+        businessId: '1',
+        name: '霧眉',
+        category: ServiceCategory.pmu,
+        duration: 180,
+        revisitPeriod: 365,
+        price: 8000,
+        profit: 5500,
+        description: '自然霧眉半永久化妝',
+        createdAt: DateTime.now().subtract(const Duration(days: 8)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 8)),
+      ),
+      Service(
+        id: '22',
+        businessId: '1',
+        name: '線條眉',
+        category: ServiceCategory.pmu,
+        duration: 180,
+        revisitPeriod: 365,
+        price: 8500,
+        profit: 6000,
+        description: '仿真線條眉半永久化妝',
+        createdAt: DateTime.now().subtract(const Duration(days: 5)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 5)),
+      ),
+      Service(
+        id: '23',
+        businessId: '1',
+        name: '美瞳線',
+        category: ServiceCategory.pmu,
+        duration: 120,
+        revisitPeriod: 365,
+        price: 6000,
+        profit: 4200,
+        description: '自然美瞳線半永久化妝',
+        createdAt: DateTime.now().subtract(const Duration(days: 5)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 5)),
+      ),
+      Service(
+        id: '24',
+        businessId: '1',
+        name: '漂唇',
+        category: ServiceCategory.pmu,
+        duration: 150,
+        revisitPeriod: 365,
+        price: 7000,
+        profit: 4900,
+        description: '自然漂唇半永久化妝',
+        createdAt: DateTime.now().subtract(const Duration(days: 3)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 3)),
+      ),
+
+      // 其他服務
+      Service(
+        id: '25',
+        businessId: '1',
+        name: '頭皮護理',
+        category: ServiceCategory.other,
+        duration: 60,
+        revisitPeriod: 21,
+        price: 1000,
+        profit: 700,
+        description: '專業頭皮深層護理',
+        createdAt: DateTime.now().subtract(const Duration(days: 3)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 3)),
+      ),
+      Service(
+        id: '26',
+        businessId: '1',
+        name: '肩頸按摩',
+        category: ServiceCategory.other,
+        duration: 30,
+        revisitPeriod: 7,
+        price: 500,
+        profit: 350,
+        description: '放鬆肩頸按摩服務',
+        createdAt: DateTime.now().subtract(const Duration(days: 1)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 1)),
+      ),
     ];
+  }
+
+  // Mock branch services data
+  static List<BranchService> getMockBranchServices(String branchId) {
+    final now = DateTime.now();
+    
+    // 為每個門店創建不同的服務配置
+    if (branchId == '1') { // 總店 - 提供所有服務
+      return [
+        // 美髮服務
+        BranchService(id: '1', branchId: '1', serviceId: '1', isAvailable: true, createdAt: now, updatedAt: now),
+        BranchService(id: '2', branchId: '1', serviceId: '2', isAvailable: true, createdAt: now, updatedAt: now),
+        BranchService(id: '3', branchId: '1', serviceId: '3', isAvailable: true, createdAt: now, updatedAt: now),
+        BranchService(id: '4', branchId: '1', serviceId: '4', isAvailable: true, createdAt: now, updatedAt: now),
+        BranchService(id: '5', branchId: '1', serviceId: '5', isAvailable: true, createdAt: now, updatedAt: now),
+        BranchService(id: '6', branchId: '1', serviceId: '6', isAvailable: true, createdAt: now, updatedAt: now),
+        BranchService(id: '7', branchId: '1', serviceId: '7', isAvailable: true, createdAt: now, updatedAt: now),
+        BranchService(id: '8', branchId: '1', serviceId: '8', isAvailable: true, createdAt: now, updatedAt: now),
+        BranchService(id: '9', branchId: '1', serviceId: '9', isAvailable: true, createdAt: now, updatedAt: now),
+        // 美甲服務
+        BranchService(id: '10', branchId: '1', serviceId: '10', isAvailable: true, createdAt: now, updatedAt: now),
+        BranchService(id: '11', branchId: '1', serviceId: '11', isAvailable: true, createdAt: now, updatedAt: now),
+        BranchService(id: '12', branchId: '1', serviceId: '12', isAvailable: true, createdAt: now, updatedAt: now),
+        BranchService(id: '13', branchId: '1', serviceId: '13', isAvailable: true, createdAt: now, updatedAt: now),
+        // 睫毛服務
+        BranchService(id: '14', branchId: '1', serviceId: '14', isAvailable: true, createdAt: now, updatedAt: now),
+        BranchService(id: '15', branchId: '1', serviceId: '15', isAvailable: true, createdAt: now, updatedAt: now),
+        BranchService(id: '16', branchId: '1', serviceId: '16', isAvailable: true, createdAt: now, updatedAt: now),
+        // 美容護膚服務
+        BranchService(id: '17', branchId: '1', serviceId: '17', isAvailable: true, createdAt: now, updatedAt: now),
+        BranchService(id: '18', branchId: '1', serviceId: '18', isAvailable: true, createdAt: now, updatedAt: now),
+        BranchService(id: '19', branchId: '1', serviceId: '19', isAvailable: true, createdAt: now, updatedAt: now),
+        BranchService(id: '20', branchId: '1', serviceId: '20', isAvailable: true, createdAt: now, updatedAt: now),
+        // 半永久化妝服務
+        BranchService(id: '21', branchId: '1', serviceId: '21', isAvailable: true, createdAt: now, updatedAt: now),
+        BranchService(id: '22', branchId: '1', serviceId: '22', isAvailable: true, createdAt: now, updatedAt: now),
+        BranchService(id: '23', branchId: '1', serviceId: '23', isAvailable: true, createdAt: now, updatedAt: now),
+        BranchService(id: '24', branchId: '1', serviceId: '24', isAvailable: true, createdAt: now, updatedAt: now),
+        // 其他服務
+        BranchService(id: '25', branchId: '1', serviceId: '25', isAvailable: true, createdAt: now, updatedAt: now),
+        BranchService(id: '26', branchId: '1', serviceId: '26', isAvailable: true, createdAt: now, updatedAt: now),
+      ];
+    } else if (branchId == '2') { // 信義門店 - 高端服務為主，價格較高
+      return [
+        // 美髮服務 - 自定義價格
+        BranchService(id: '27', branchId: '2', serviceId: '1', isAvailable: true, customPrice: 650, customProfit: 450, createdAt: now, updatedAt: now),
+        BranchService(id: '28', branchId: '2', serviceId: '2', isAvailable: true, customPrice: 850, customProfit: 650, createdAt: now, updatedAt: now),
+        BranchService(id: '29', branchId: '2', serviceId: '5', isAvailable: true, customPrice: 1300, customProfit: 900, createdAt: now, updatedAt: now),
+        BranchService(id: '30', branchId: '2', serviceId: '6', isAvailable: true, customPrice: 1600, customProfit: 1100, createdAt: now, updatedAt: now),
+        BranchService(id: '31', branchId: '2', serviceId: '7', isAvailable: true, customPrice: 2800, customProfit: 1700, createdAt: now, updatedAt: now),
+        BranchService(id: '32', branchId: '2', serviceId: '8', isAvailable: true, customPrice: 3800, customProfit: 2500, createdAt: now, updatedAt: now),
+        // 美甲服務
+        BranchService(id: '33', branchId: '2', serviceId: '11', isAvailable: true, customPrice: 1300, customProfit: 900, createdAt: now, updatedAt: now),
+        BranchService(id: '34', branchId: '2', serviceId: '12', isAvailable: true, customPrice: 2000, customProfit: 1400, createdAt: now, updatedAt: now),
+        // 睫毛服務
+        BranchService(id: '35', branchId: '2', serviceId: '14', isAvailable: true, customPrice: 2200, customProfit: 1500, createdAt: now, updatedAt: now),
+        BranchService(id: '36', branchId: '2', serviceId: '15', isAvailable: true, customPrice: 900, customProfit: 600, createdAt: now, updatedAt: now),
+        // 美容護膚服務
+        BranchService(id: '37', branchId: '2', serviceId: '18', isAvailable: true, customPrice: 1700, customProfit: 1200, createdAt: now, updatedAt: now),
+        BranchService(id: '38', branchId: '2', serviceId: '19', isAvailable: true, customPrice: 2800, customProfit: 1900, createdAt: now, updatedAt: now),
+        // 半永久化妝服務
+        BranchService(id: '39', branchId: '2', serviceId: '21', isAvailable: true, customPrice: 8500, customProfit: 6000, createdAt: now, updatedAt: now),
+        BranchService(id: '40', branchId: '2', serviceId: '22', isAvailable: true, customPrice: 9000, customProfit: 6500, createdAt: now, updatedAt: now),
+      ];
+    } else if (branchId == '3') { // 西門門店 - 年輕族群，基礎服務為主
+      return [
+        // 美髮服務 - 部分優惠價格
+        BranchService(id: '41', branchId: '3', serviceId: '1', isAvailable: true, createdAt: now, updatedAt: now),
+        BranchService(id: '42', branchId: '3', serviceId: '2', isAvailable: true, createdAt: now, updatedAt: now),
+        BranchService(id: '43', branchId: '3', serviceId: '3', isAvailable: true, customPrice: 350, customProfit: 250, createdAt: now, updatedAt: now),
+        BranchService(id: '44', branchId: '3', serviceId: '4', isAvailable: true, createdAt: now, updatedAt: now),
+        BranchService(id: '45', branchId: '3', serviceId: '6', isAvailable: true, customPrice: 1400, customProfit: 950, createdAt: now, updatedAt: now),
+        BranchService(id: '46', branchId: '3', serviceId: '7', isAvailable: true, customPrice: 2300, customProfit: 1400, createdAt: now, updatedAt: now),
+        // 美甲服務
+        BranchService(id: '47', branchId: '3', serviceId: '10', isAvailable: true, customPrice: 750, customProfit: 450, createdAt: now, updatedAt: now),
+        BranchService(id: '48', branchId: '3', serviceId: '11', isAvailable: true, customPrice: 1100, customProfit: 750, createdAt: now, updatedAt: now),
+        // 睫毛服務
+        BranchService(id: '49', branchId: '3', serviceId: '14', isAvailable: true, customPrice: 1800, customProfit: 1200, createdAt: now, updatedAt: now),
+        BranchService(id: '50', branchId: '3', serviceId: '16', isAvailable: true, customPrice: 1100, customProfit: 750, createdAt: now, updatedAt: now),
+        // 美容護膚服務
+        BranchService(id: '51', branchId: '3', serviceId: '17', isAvailable: true, customPrice: 900, customProfit: 600, createdAt: now, updatedAt: now),
+        BranchService(id: '52', branchId: '3', serviceId: '20', isAvailable: true, customPrice: 1100, customProfit: 750, createdAt: now, updatedAt: now),
+      ];
+    } else if (branchId == '4') { // 板橋門店 - 家庭客群，全面服務
+      return [
+        // 美髮服務
+        BranchService(id: '53', branchId: '4', serviceId: '1', isAvailable: true, customPrice: 580, customProfit: 380, createdAt: now, updatedAt: now),
+        BranchService(id: '54', branchId: '4', serviceId: '2', isAvailable: true, customPrice: 750, customProfit: 550, createdAt: now, updatedAt: now),
+        BranchService(id: '55', branchId: '4', serviceId: '3', isAvailable: true, customPrice: 380, customProfit: 280, createdAt: now, updatedAt: now),
+        BranchService(id: '56', branchId: '4', serviceId: '4', isAvailable: true, customPrice: 180, customProfit: 130, createdAt: now, updatedAt: now),
+        BranchService(id: '57', branchId: '4', serviceId: '5', isAvailable: true, customPrice: 1150, customProfit: 750, createdAt: now, updatedAt: now),
+        BranchService(id: '58', branchId: '4', serviceId: '6', isAvailable: true, customPrice: 1450, customProfit: 950, createdAt: now, updatedAt: now),
+        BranchService(id: '59', branchId: '4', serviceId: '9', isAvailable: true, customPrice: 750, customProfit: 450, createdAt: now, updatedAt: now),
+        // 美甲服務
+        BranchService(id: '60', branchId: '4', serviceId: '10', isAvailable: true, customPrice: 750, customProfit: 450, createdAt: now, updatedAt: now),
+        BranchService(id: '61', branchId: '4', serviceId: '11', isAvailable: true, customPrice: 1150, customProfit: 750, createdAt: now, updatedAt: now),
+        BranchService(id: '62', branchId: '4', serviceId: '13', isAvailable: true, customPrice: 550, customProfit: 350, createdAt: now, updatedAt: now),
+        // 美容護膚服務
+        BranchService(id: '63', branchId: '4', serviceId: '17', isAvailable: true, customPrice: 950, customProfit: 600, createdAt: now, updatedAt: now),
+        BranchService(id: '64', branchId: '4', serviceId: '18', isAvailable: true, customPrice: 1400, customProfit: 950, createdAt: now, updatedAt: now),
+        // 其他服務
+        BranchService(id: '65', branchId: '4', serviceId: '25', isAvailable: true, customPrice: 950, customProfit: 650, createdAt: now, updatedAt: now),
+        BranchService(id: '66', branchId: '4', serviceId: '26', isAvailable: true, customPrice: 450, customProfit: 300, createdAt: now, updatedAt: now),
+      ];
+    } else if (branchId == '5') { // 天母門店 - 高端客群，專業服務
+      return [
+        // 美髮服務 - 高端定價
+        BranchService(id: '67', branchId: '5', serviceId: '2', isAvailable: true, customPrice: 900, customProfit: 700, createdAt: now, updatedAt: now),
+        BranchService(id: '68', branchId: '5', serviceId: '5', isAvailable: true, customPrice: 1350, customProfit: 950, createdAt: now, updatedAt: now),
+        BranchService(id: '69', branchId: '5', serviceId: '6', isAvailable: true, customPrice: 1650, customProfit: 1150, createdAt: now, updatedAt: now),
+        BranchService(id: '70', branchId: '5', serviceId: '7', isAvailable: true, customPrice: 2800, customProfit: 1700, createdAt: now, updatedAt: now),
+        BranchService(id: '71', branchId: '5', serviceId: '8', isAvailable: true, customPrice: 3800, customProfit: 2500, createdAt: now, updatedAt: now),
+        BranchService(id: '72', branchId: '5', serviceId: '9', isAvailable: true, customPrice: 850, customProfit: 550, createdAt: now, updatedAt: now),
+        // 美甲服務
+        BranchService(id: '73', branchId: '5', serviceId: '11', isAvailable: true, customPrice: 1350, customProfit: 950, createdAt: now, updatedAt: now),
+        BranchService(id: '74', branchId: '5', serviceId: '12', isAvailable: true, customPrice: 2000, customProfit: 1400, createdAt: now, updatedAt: now),
+        BranchService(id: '75', branchId: '5', serviceId: '13', isAvailable: true, customPrice: 650, customProfit: 450, createdAt: now, updatedAt: now),
+        // 睫毛服務
+        BranchService(id: '76', branchId: '5', serviceId: '14', isAvailable: true, customPrice: 2300, customProfit: 1600, createdAt: now, updatedAt: now),
+        BranchService(id: '77', branchId: '5', serviceId: '15', isAvailable: true, customPrice: 900, customProfit: 600, createdAt: now, updatedAt: now),
+        BranchService(id: '78', branchId: '5', serviceId: '16', isAvailable: true, customPrice: 1350, customProfit: 950, createdAt: now, updatedAt: now),
+        // 美容護膚服務
+        BranchService(id: '79', branchId: '5', serviceId: '18', isAvailable: true, customPrice: 1650, customProfit: 1150, createdAt: now, updatedAt: now),
+        BranchService(id: '80', branchId: '5', serviceId: '19', isAvailable: true, customPrice: 2800, customProfit: 1900, createdAt: now, updatedAt: now),
+        // 半永久化妝服務
+        BranchService(id: '81', branchId: '5', serviceId: '21', isAvailable: true, customPrice: 8800, customProfit: 6300, createdAt: now, updatedAt: now),
+        BranchService(id: '82', branchId: '5', serviceId: '22', isAvailable: true, customPrice: 9300, customProfit: 6800, createdAt: now, updatedAt: now),
+        BranchService(id: '83', branchId: '5', serviceId: '23', isAvailable: true, customPrice: 6500, customProfit: 4700, createdAt: now, updatedAt: now),
+        BranchService(id: '84', branchId: '5', serviceId: '24', isAvailable: true, customPrice: 7500, customProfit: 5300, createdAt: now, updatedAt: now),
+      ];
+    } else if (branchId == '6') { // 內湖門店 - 上班族客群，快速服務
+      return [
+        // 美髮服務 - 快速服務為主
+        BranchService(id: '85', branchId: '6', serviceId: '1', isAvailable: true, customPrice: 580, customProfit: 380, createdAt: now, updatedAt: now),
+        BranchService(id: '86', branchId: '6', serviceId: '2', isAvailable: true, customPrice: 780, customProfit: 580, createdAt: now, updatedAt: now),
+        BranchService(id: '87', branchId: '6', serviceId: '4', isAvailable: true, customPrice: 180, customProfit: 130, createdAt: now, updatedAt: now),
+        BranchService(id: '88', branchId: '6', serviceId: '5', isAvailable: true, customPrice: 1180, customProfit: 780, createdAt: now, updatedAt: now),
+        BranchService(id: '89', branchId: '6', serviceId: '6', isAvailable: true, customPrice: 1480, customProfit: 980, createdAt: now, updatedAt: now),
+        BranchService(id: '90', branchId: '6', serviceId: '9', isAvailable: true, customPrice: 780, customProfit: 480, createdAt: now, updatedAt: now),
+        // 美甲服務
+        BranchService(id: '91', branchId: '6', serviceId: '10', isAvailable: true, customPrice: 780, customProfit: 480, createdAt: now, updatedAt: now),
+        BranchService(id: '92', branchId: '6', serviceId: '11', isAvailable: true, customPrice: 1180, customProfit: 780, createdAt: now, updatedAt: now),
+        BranchService(id: '93', branchId: '6', serviceId: '13', isAvailable: true, customPrice: 580, customProfit: 380, createdAt: now, updatedAt: now),
+        // 睫毛服務
+        BranchService(id: '94', branchId: '6', serviceId: '15', isAvailable: true, customPrice: 780, customProfit: 480, createdAt: now, updatedAt: now),
+        BranchService(id: '95', branchId: '6', serviceId: '16', isAvailable: true, customPrice: 1180, customProfit: 780, createdAt: now, updatedAt: now),
+        // 美容護膚服務
+        BranchService(id: '96', branchId: '6', serviceId: '17', isAvailable: true, customPrice: 980, customProfit: 630, createdAt: now, updatedAt: now),
+        BranchService(id: '97', branchId: '6', serviceId: '20', isAvailable: true, customPrice: 1180, customProfit: 780, createdAt: now, updatedAt: now),
+        // 其他服務
+        BranchService(id: '98', branchId: '6', serviceId: '25', isAvailable: true, customPrice: 980, customProfit: 680, createdAt: now, updatedAt: now),
+        BranchService(id: '99', branchId: '6', serviceId: '26', isAvailable: true, customPrice: 480, customProfit: 330, createdAt: now, updatedAt: now),
+      ];
+    }
+    
+    return [];
   }
 
   // Mock customers data

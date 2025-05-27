@@ -5,6 +5,9 @@ import '../models/customer.dart';
 import '../models/service_history.dart';
 import '../models/business_goal.dart';
 import '../models/business_analysis.dart';
+import '../models/branch.dart';
+import '../models/branch_special_day.dart';
+import '../models/branch_service.dart';
 import 'mock_data_service.dart';
 
 class MockApiService {
@@ -39,6 +42,52 @@ class MockApiService {
     await Future.delayed(const Duration(milliseconds: 500));
     final businesses = MockDataService.getMockBusinesses();
     return businesses.firstWhere((b) => b.id == id);
+  }
+  
+  // Branch API
+  Future<List<Branch>> getBranches(String businessId) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return MockDataService.getMockBranches(businessId);
+  }
+  
+  Future<Branch> createBranch(Branch branch) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return branch;
+  }
+  
+  Future<Branch> getBranch(String id) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    final branches = MockDataService.getMockBranches(null);
+    return branches.firstWhere((b) => b.id == id);
+  }
+  
+  Future<Branch> updateBranch(String id, Branch branch) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return branch;
+  }
+  
+  Future<void> deleteBranch(String id) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+  }
+  
+  // Branch Special Days API
+  Future<List<BranchSpecialDay>> getBranchSpecialDays(String branchId, {DateTime? date}) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return MockDataService.getMockBranchSpecialDays(branchId, date: date);
+  }
+  
+  Future<BranchSpecialDay> createBranchSpecialDay(BranchSpecialDay specialDay) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return specialDay;
+  }
+  
+  Future<BranchSpecialDay> updateBranchSpecialDay(String id, BranchSpecialDay specialDay) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return specialDay;
+  }
+  
+  Future<void> deleteBranchSpecialDay(String id) async {
+    await Future.delayed(const Duration(milliseconds: 500));
   }
   
   // Service API
@@ -79,10 +128,43 @@ class MockApiService {
     return service;
   }
   
-  Future<void> deleteService(String id) async {
+    Future<void> deleteService(String id) async {
     await Future.delayed(const Duration(milliseconds: 500));
   }
-  
+
+  // Branch Service API
+  Future<List<BranchService>> getBranchServices(String branchId) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return MockDataService.getMockBranchServices(branchId);
+  }
+
+  Future<List<Service>> getBranchAvailableServices(String branchId) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    final branchServices = await getBranchServices(branchId);
+    final allServices = MockDataService.getMockServices();
+    
+    final availableServiceIds = branchServices
+        .where((bs) => bs.isAvailable)
+        .map((bs) => bs.serviceId)
+        .toSet();
+    
+    return allServices.where((s) => availableServiceIds.contains(s.id)).toList();
+  }
+
+  Future<BranchService> createBranchService(BranchService branchService) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return branchService;
+  }
+
+  Future<BranchService> updateBranchService(String id, BranchService branchService) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return branchService;
+  }
+
+  Future<void> deleteBranchService(String id) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+  }
+
   // Appointment API
   Future<List<Appointment>> getAppointments() async {
     await Future.delayed(const Duration(milliseconds: 500));

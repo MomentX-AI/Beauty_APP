@@ -23,7 +23,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     {'icon': '儀', 'title': '儀表板', 'isSelected': true},
     {'icon': '預', 'title': '預約管理', 'isSelected': false},
     {'icon': '客', 'title': '客戶管理', 'isSelected': false},
-    {'icon': '服', 'title': '服務管理', 'isSelected': false},
+    {'icon': '服', 'title': '門店及服務管理', 'isSelected': false},
     {'icon': '報', 'title': '業務分析報告', 'isSelected': false},
     {'icon': 'AI', 'title': 'AI 助理', 'isSelected': false},
     {'icon': '用', 'title': '用戶管理', 'isSelected': false},

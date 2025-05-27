@@ -16,7 +16,6 @@ class OwnerProfileScreen extends StatefulWidget {
 class _OwnerProfileScreenState extends State<OwnerProfileScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final _formKey = GlobalKey<FormState>();
-  final _businessHoursFormKey = GlobalKey<FormState>();
   final _socialLinksFormKey = GlobalKey<FormState>();
   
   // 表單控制器
@@ -26,11 +25,6 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> with SingleTick
   final _addressController = TextEditingController(text: '台北市中山區美髮路123號');
   final _taxIdController = TextEditingController(text: '12345678');
   final _emailController = TextEditingController(text: 'wanghairsalon@example.com');
-  
-  // 營業時間控制器
-  final List<TimeOfDay?> _openTimes = List.filled(7, null);
-  final List<TimeOfDay?> _closeTimes = List.filled(7, null);
-  final List<bool> _isClosed = List.filled(7, false);
   
   // 社群連結控制器
   final _facebookController = TextEditingController();
@@ -45,21 +39,7 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> with SingleTick
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
-    // 設置預設營業時間
-    _openTimes[0] = const TimeOfDay(hour: 10, minute: 0); // 週一
-    _closeTimes[0] = const TimeOfDay(hour: 20, minute: 0);
-    _openTimes[1] = const TimeOfDay(hour: 10, minute: 0); // 週二
-    _closeTimes[1] = const TimeOfDay(hour: 20, minute: 0);
-    _openTimes[2] = const TimeOfDay(hour: 10, minute: 0); // 週三
-    _closeTimes[2] = const TimeOfDay(hour: 20, minute: 0);
-    _openTimes[3] = const TimeOfDay(hour: 10, minute: 0); // 週四
-    _closeTimes[3] = const TimeOfDay(hour: 20, minute: 0);
-    _openTimes[4] = const TimeOfDay(hour: 10, minute: 0); // 週五
-    _closeTimes[4] = const TimeOfDay(hour: 20, minute: 0);
-    _openTimes[5] = const TimeOfDay(hour: 10, minute: 0); // 週六
-    _closeTimes[5] = const TimeOfDay(hour: 18, minute: 0);
-    _isClosed[6] = true; // 週日休息
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -159,22 +139,7 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> with SingleTick
     return null;
   }
 
-  Future<void> _selectTime(BuildContext context, int index, bool isOpenTime) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: isOpenTime ? _openTimes[index] ?? const TimeOfDay(hour: 10, minute: 0)
-                             : _closeTimes[index] ?? const TimeOfDay(hour: 20, minute: 0),
-    );
-    if (picked != null) {
-      setState(() {
-        if (isOpenTime) {
-          _openTimes[index] = picked;
-        } else {
-          _closeTimes[index] = picked;
-        }
-      });
-    }
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -202,7 +167,6 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> with SingleTick
             ),
             tabs: const [
               Tab(text: '基本資料'),
-              Tab(text: '營業時間'),
               Tab(text: '社群連結'),
             ],
           ),
@@ -213,7 +177,6 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> with SingleTick
             controller: _tabController,
             children: [
               _buildBasicInfoTab(),
-              _buildBusinessHoursTab(),
               _buildSocialLinksTab(),
             ],
           ),
@@ -386,116 +349,7 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> with SingleTick
     );
   }
 
-  Widget _buildBusinessHoursTab() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Form(
-        key: _businessHoursFormKey,
-        child: Column(
-          children: [
-            const Text(
-              '營業時間設定',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            ...List.generate(7, (index) {
-              final weekdays = ['週一', '週二', '週三', '週四', '週五', '週六', '週日'];
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 60,
-                      child: Text(weekdays[index]),
-                    ),
-                    Checkbox(
-                      value: !_isClosed[index],
-                      onChanged: (value) {
-                        setState(() {
-                          _isClosed[index] = !(value ?? true);
-                        });
-                      },
-                    ),
-                    if (!_isClosed[index]) ...[
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: TextButton(
-                                onPressed: () => _selectTime(context, index, true),
-                                child: Text(
-                                  _openTimes[index]?.format(context) ?? '選擇時間',
-                                ),
-                              ),
-                            ),
-                            const Text('至'),
-                            Expanded(
-                              child: TextButton(
-                                onPressed: () => _selectTime(context, index, false),
-                                child: Text(
-                                  _closeTimes[index]?.format(context) ?? '選擇時間',
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ] else
-                      const Expanded(
-                        child: Text('休息'),
-                      ),
-                  ],
-                ),
-              );
-            }),
-            const SizedBox(height: 24),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                OutlinedButton(
-                  onPressed: () {
-                    // TODO: 實現取消功能
-                  },
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 12,
-                    ),
-                  ),
-                  child: const Text('取消'),
-                ),
-                const SizedBox(width: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_businessHoursFormKey.currentState!.validate()) {
-                      // TODO: 實現儲存功能
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('營業時間已儲存')),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF6C5CE7),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 12,
-                    ),
-                  ),
-                  child: const Text(
-                    '儲存變更',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+
 
   Widget _buildSocialLinksTab() {
     return SingleChildScrollView(
