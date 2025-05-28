@@ -709,11 +709,13 @@ class MockDataService {
   static Future<List<Appointment>> getMockAppointments() async {
     final customers = await getMockCustomers();
     final services = await getMockServices();
+    final branches = getMockBranches('1');
     
     return [
       Appointment(
         id: '1',
         businessId: '1',
+        branchId: '1', // 總店
         customerId: customers[0].id,
         serviceId: services[0].id,
         startTime: DateTime.now().add(const Duration(hours: 1)),
@@ -721,12 +723,14 @@ class MockDataService {
         status: AppointmentStatus.booked,
         customer: customers[0],
         service: services[0],
+        branch: branches.firstWhere((b) => b.id == '1'),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       ),
       Appointment(
         id: '2',
         businessId: '1',
+        branchId: '2', // 信義門店
         customerId: customers[1].id,
         serviceId: services[1].id,
         startTime: DateTime.now().add(const Duration(hours: 2)),
@@ -734,12 +738,14 @@ class MockDataService {
         status: AppointmentStatus.confirmed,
         customer: customers[1],
         service: services[1],
+        branch: branches.firstWhere((b) => b.id == '2'),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       ),
       Appointment(
         id: '3',
         businessId: '1',
+        branchId: '1', // 總店
         customerId: customers[0].id,
         serviceId: services[2].id,
         startTime: DateTime.now().add(const Duration(hours: 3)),
@@ -747,8 +753,115 @@ class MockDataService {
         status: AppointmentStatus.checked_in,
         customer: customers[0],
         service: services[2],
+        branch: branches.firstWhere((b) => b.id == '1'),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
+      ),
+      Appointment(
+        id: '4',
+        businessId: '1',
+        branchId: '3', // 西門門店
+        customerId: customers[1].id,
+        serviceId: services[3].id,
+        startTime: DateTime.now().add(const Duration(days: 1, hours: 1)),
+        endTime: DateTime.now().add(const Duration(days: 1, hours: 2)),
+        status: AppointmentStatus.booked,
+        customer: customers[1],
+        service: services[3],
+        branch: branches.firstWhere((b) => b.id == '3'),
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      ),
+      Appointment(
+        id: '5',
+        businessId: '1',
+        branchId: '4', // 板橋門店
+        customerId: customers[0].id,
+        serviceId: services[4].id,
+        startTime: DateTime.now().add(const Duration(days: 1, hours: 3)),
+        endTime: DateTime.now().add(const Duration(days: 1, hours: 4)),
+        status: AppointmentStatus.confirmed,
+        customer: customers[0],
+        service: services[4],
+        branch: branches.firstWhere((b) => b.id == '4'),
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      ),
+      Appointment(
+        id: '6',
+        businessId: '1',
+        branchId: '5', // 天母門店
+        customerId: customers[1].id,
+        serviceId: services[5].id,
+        startTime: DateTime.now().add(const Duration(days: 2, hours: 2)),
+        endTime: DateTime.now().add(const Duration(days: 2, hours: 3)),
+        status: AppointmentStatus.completed,
+        customer: customers[1],
+        service: services[5],
+        branch: branches.firstWhere((b) => b.id == '5'),
+        createdAt: DateTime.now().subtract(const Duration(days: 1)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 1)),
+      ),
+      Appointment(
+        id: '7',
+        businessId: '1',
+        branchId: '6', // 內湖門店
+        customerId: customers[0].id,
+        serviceId: services[6].id,
+        startTime: DateTime.now().add(const Duration(days: 3, hours: 1)),
+        endTime: DateTime.now().add(const Duration(days: 3, hours: 2)),
+        status: AppointmentStatus.booked,
+        customer: customers[0],
+        service: services[6],
+        branch: branches.firstWhere((b) => b.id == '6'),
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      ),
+      // 今天的預約
+      Appointment(
+        id: '8',
+        businessId: '1',
+        branchId: '1', // 總店
+        customerId: customers[1].id,
+        serviceId: services[7].id,
+        startTime: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 10, 0),
+        endTime: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 11, 30),
+        status: AppointmentStatus.confirmed,
+        customer: customers[1],
+        service: services[7],
+        branch: branches.firstWhere((b) => b.id == '1'),
+        createdAt: DateTime.now().subtract(const Duration(days: 2)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 2)),
+      ),
+      Appointment(
+        id: '9',
+        businessId: '1',
+        branchId: '2', // 信義門店
+        customerId: customers[0].id,
+        serviceId: services[8].id,
+        startTime: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 14, 0),
+        endTime: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 15, 0),
+        status: AppointmentStatus.booked,
+        customer: customers[0],
+        service: services[8],
+        branch: branches.firstWhere((b) => b.id == '2'),
+        createdAt: DateTime.now().subtract(const Duration(days: 1)),
+        updatedAt: DateTime.now().subtract(const Duration(days: 1)),
+      ),
+      Appointment(
+        id: '10',
+        businessId: '1',
+        branchId: '3', // 西門門店
+        customerId: customers[1].id,
+        serviceId: services[9].id,
+        startTime: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 16, 30),
+        endTime: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 17, 30),
+        status: AppointmentStatus.checked_in,
+        customer: customers[1],
+        service: services[9],
+        branch: branches.firstWhere((b) => b.id == '3'),
+        createdAt: DateTime.now().subtract(const Duration(hours: 2)),
+        updatedAt: DateTime.now().subtract(const Duration(hours: 1)),
       ),
     ];
   }

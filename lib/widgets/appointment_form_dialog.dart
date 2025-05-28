@@ -3,18 +3,21 @@ import 'package:intl/intl.dart';
 import '../models/appointment.dart';
 import '../models/customer.dart';
 import '../models/service.dart';
+import '../models/branch.dart';
 import '../services/mock_data_service.dart';
 
 class AppointmentFormDialog extends StatefulWidget {
   final DateTime selectedDate;
   final Function(Appointment) onSave;
   final Appointment? appointment;
+  final String businessId;
 
   const AppointmentFormDialog({
     Key? key,
     required this.selectedDate,
     required this.onSave,
     this.appointment,
+    required this.businessId,
   }) : super(key: key);
 
   @override
@@ -25,10 +28,12 @@ class _AppointmentFormDialogState extends State<AppointmentFormDialog> {
   final _formKey = GlobalKey<FormState>();
   String? _selectedCustomerId;
   String? _selectedServiceId;
+  String? _selectedBranchId;
   TimeOfDay _selectedTime = TimeOfDay.now();
   final _noteController = TextEditingController();
   List<Customer> _customers = [];
   List<Service> _services = [];
+  List<Branch> _branches = [];
   bool _isLoading = true;
 
   @override
@@ -40,20 +45,23 @@ class _AppointmentFormDialogState extends State<AppointmentFormDialog> {
   Future<void> _loadData() async {
     setState(() => _isLoading = true);
     try {
-      // Load customers and services
+      // Load customers, services, and branches
       final customers = await MockDataService.getMockCustomers();
       final services = await MockDataService.getMockServices();
+      final branches = MockDataService.getMockBranches(widget.businessId);
       
       if (!mounted) return;
       
       setState(() {
         _customers = customers;
         _services = services;
+        _branches = branches;
         
         // If editing an existing appointment, set the selected values
         if (widget.appointment != null) {
           _selectedCustomerId = widget.appointment!.customerId;
           _selectedServiceId = widget.appointment!.serviceId;
+          _selectedBranchId = widget.appointment!.branchId;
           _selectedTime = TimeOfDay.fromDateTime(widget.appointment!.startTime);
           _noteController.text = widget.appointment!.note ?? '';
         } else {
@@ -63,6 +71,9 @@ class _AppointmentFormDialogState extends State<AppointmentFormDialog> {
           }
           if (services.isNotEmpty) {
             _selectedServiceId = services[0].id;
+          }
+          if (branches.isNotEmpty) {
+            _selectedBranchId = branches[0].id;
           }
         }
         
@@ -91,7 +102,8 @@ class _AppointmentFormDialogState extends State<AppointmentFormDialog> {
   void _saveAppointment() {
     if (_formKey.currentState!.validate() && 
         _selectedCustomerId != null && 
-        _selectedServiceId != null) {
+        _selectedServiceId != null &&
+        _selectedBranchId != null) {
       final startTime = DateTime(
         widget.selectedDate.year,
         widget.selectedDate.month,
@@ -107,7 +119,8 @@ class _AppointmentFormDialogState extends State<AppointmentFormDialog> {
 
       final appointment = Appointment(
         id: widget.appointment?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
-        businessId: '1', // Mock business ID
+        businessId: widget.businessId,
+        branchId: _selectedBranchId!,
         customerId: _selectedCustomerId!,
         serviceId: _selectedServiceId!,
         startTime: startTime,
@@ -135,6 +148,67 @@ class _AppointmentFormDialogState extends State<AppointmentFormDialog> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    // 門店下拉選單
+                    if (_branches.isEmpty)
+                      const Text('沒有可用的門店資料')
+                    else
+                      Container(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: InputDecorator(
+                          decoration: const InputDecoration(
+                            labelText: '門店',
+                            border: OutlineInputBorder(),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          ),
+                          child: DropdownButton<String>(
+                            value: _selectedBranchId,
+                            isExpanded: true,
+                            underline: Container(),
+                            items: _branches.map((Branch branch) {
+                              return DropdownMenuItem<String>(
+                                value: branch.id,
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.store,
+                                      size: 16,
+                                      color: branch.isDefault ? Colors.blue : Colors.grey,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(branch.name),
+                                    if (branch.isDefault) ...[
+                                      const SizedBox(width: 8),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                        decoration: BoxDecoration(
+                                          color: Colors.blue.withOpacity(0.1),
+                                          borderRadius: BorderRadius.circular(4),
+                                        ),
+                                        child: const Text(
+                                          '總店',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.blue,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValueId) {
+                              if (newValueId != null) {
+                                setState(() {
+                                  _selectedBranchId = newValueId;
+                                });
+                              }
+                            },
+                            hint: const Text('請選擇門店'),
+                          ),
+                        ),
+                      ),
+
                     // 客戶下拉選單
                     if (_customers.isEmpty)
                       const Text('沒有可用的客戶資料')

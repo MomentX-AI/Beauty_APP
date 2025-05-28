@@ -119,24 +119,37 @@ lib/
   ├── screens/       # 應用界面
   ├── services/      # API和業務邏輯服務
   ├── widgets/       # 可重用UI小部件
+  ├── routes/        # 路由配置
   └── main.dart      # 應用入口點
 ```
 
 ## 依賴項
 
-- **UI和交互**: Flutter Material Design
-- **圖表和數據可視化**: fl_chart ^0.66.2
-- **日期和日曆**: table_calendar ^3.1.3, intl ^0.19.0
-- **媒體管理**: image_picker ^1.0.7
-- **其他工具**: uuid ^4.3.3, path ^1.8.3
+- **UI和交互**: 
+  - Flutter Material Design
+  - cupertino_icons: ^1.0.2
+- **路由管理**: 
+  - go_router: ^14.6.2
+- **圖表和數據可視化**: 
+  - fl_chart: ^0.66.2
+- **日期和日曆**: 
+  - table_calendar: ^3.1.3
+  - intl: ^0.19.0
+- **媒體管理**: 
+  - image_picker: ^1.0.7
+- **其他工具**: 
+  - uuid: ^4.3.3
+  - path: ^1.8.3
 
 ## 技術堆疊
 
-- **Frontend**: Flutter, Dart
+- **前端框架**: Flutter, Dart
+- **路由管理**: go_router
+- **UI組件**: Material Design, Cupertino Icons
 - **圖表和數據可視化**: fl_chart
 - **日期和日曆**: table_calendar, intl
 - **媒體管理**: image_picker
-- **其他工具**: uuid, path
+- **開發工具**: flutter_lints
 
 ## 開發團隊
 
@@ -150,3 +163,6 @@ lib/
 - 實現通知系統
 - 多語言支持
 - 雲端同步備份
+- 實現離線模式
+- 優化性能
+- 增加更多數據分析功能
