@@ -208,6 +208,51 @@ class AppointmentCard extends StatelessWidget {
                   ),
                 ],
               ),
+              const SizedBox(height: 8),
+              
+              // 第五行：指定員工信息
+              Row(
+                children: [
+                  Icon(
+                    appointment.staffId != null ? Icons.person : Icons.person_off,
+                    size: 16,
+                    color: appointment.staffId != null 
+                        ? (appointment.staff?.roleColor ?? Colors.green)
+                        : Colors.grey,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Text(
+                          appointment.staffId != null 
+                              ? appointment.staffName 
+                              : '未指定員工',
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                        if (appointment.staff != null) ...[
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: appointment.staff!.roleColor.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              appointment.staff!.roleText,
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: appointment.staff!.roleColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ],
+              ),
               
               // 備註（如果有的話）
               if (appointment.note != null && appointment.note!.isNotEmpty) ...[

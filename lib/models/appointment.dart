@@ -1,6 +1,7 @@
 import 'customer.dart';
 import 'service.dart';
 import 'branch.dart';
+import 'staff.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
@@ -19,6 +20,7 @@ class Appointment {
   final String branchId;
   final String customerId;
   final String serviceId;
+  final String? staffId;
   final DateTime startTime;
   final DateTime endTime;
   final AppointmentStatus status;
@@ -28,6 +30,7 @@ class Appointment {
   final Customer? customer;
   final Service? service;
   final Branch? branch;
+  final Staff? staff;
 
   Appointment({
     required this.id,
@@ -35,6 +38,7 @@ class Appointment {
     required this.branchId,
     required this.customerId,
     required this.serviceId,
+    this.staffId,
     required this.startTime,
     required this.endTime,
     required this.status,
@@ -44,6 +48,7 @@ class Appointment {
     this.customer,
     this.service,
     this.branch,
+    this.staff,
   });
 
   factory Appointment.fromJson(Map<String, dynamic> json) {
@@ -73,6 +78,7 @@ class Appointment {
       branchId: json['branch_id'] as String,
       customerId: json['customer_id'] as String,
       serviceId: json['service_id'] as String,
+      staffId: json['staff_id'] as String?,
       startTime: DateTime.parse(json['start_time'] as String),
       endTime: DateTime.parse(json['end_time'] as String),
       status: parseStatus(json['status'] as String),
@@ -82,6 +88,7 @@ class Appointment {
       customer: json['customer'] != null ? Customer.fromJson(json['customer']) : null,
       service: json['service'] != null ? Service.fromJson(json['service']) : null,
       branch: json['branch'] != null ? Branch.fromJson(json['branch']) : null,
+      staff: json['staff'] != null ? Staff.fromJson(json['staff']) : null,
     );
   }
 
@@ -111,6 +118,7 @@ class Appointment {
       'branch_id': branchId,
       'customer_id': customerId,
       'service_id': serviceId,
+      'staff_id': staffId,
       'start_time': startTime.toIso8601String(),
       'end_time': endTime.toIso8601String(),
       'status': statusToString(status),
@@ -120,6 +128,7 @@ class Appointment {
       'customer': customer?.toJson(),
       'service': service?.toJson(),
       'branch': branch?.toJson(),
+      'staff': staff?.toJson(),
     };
   }
 
@@ -129,6 +138,7 @@ class Appointment {
     String? branchId,
     String? customerId,
     String? serviceId,
+    String? staffId,
     DateTime? startTime,
     DateTime? endTime,
     AppointmentStatus? status,
@@ -138,6 +148,7 @@ class Appointment {
     Customer? customer,
     Service? service,
     Branch? branch,
+    Staff? staff,
   }) {
     return Appointment(
       id: id ?? this.id,
@@ -145,6 +156,7 @@ class Appointment {
       branchId: branchId ?? this.branchId,
       customerId: customerId ?? this.customerId,
       serviceId: serviceId ?? this.serviceId,
+      staffId: staffId ?? this.staffId,
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,
       status: status ?? this.status,
@@ -154,6 +166,7 @@ class Appointment {
       customer: customer ?? this.customer,
       service: service ?? this.service,
       branch: branch ?? this.branch,
+      staff: staff ?? this.staff,
     );
   }
 
@@ -194,5 +207,6 @@ class Appointment {
   String get customerName => customer?.name ?? '未知客戶';
   String get serviceName => service?.name ?? '未知服務';
   String get branchName => branch?.name ?? '未知門店';
+  String get staffName => staff?.name ?? '未指定';
   bool get isSpecialCustomer => customer?.isSpecialCustomer ?? false;
 } 

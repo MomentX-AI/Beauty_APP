@@ -9,6 +9,7 @@ import '../models/branch.dart';
 import '../models/branch_special_day.dart';
 import '../models/branch_service.dart';
 import '../models/staff.dart';
+import '../models/staff_schedule.dart';
 
 class MockDataService {
   // Mock businesses data
@@ -711,6 +712,7 @@ class MockDataService {
     final customers = await getMockCustomers();
     final services = await getMockServices();
     final branches = getMockBranches('1');
+    final staff = getMockStaff('1');
     
     return [
       Appointment(
@@ -718,13 +720,15 @@ class MockDataService {
         businessId: '1',
         branchId: '1', // 總店
         customerId: customers[0].id,
-        serviceId: services[0].id,
+        serviceId: services[0].id, // 男士剪髮
+        staffId: '2', // 李經理
         startTime: DateTime.now().add(const Duration(hours: 1)),
         endTime: DateTime.now().add(const Duration(hours: 2)),
         status: AppointmentStatus.booked,
         customer: customers[0],
         service: services[0],
         branch: branches.firstWhere((b) => b.id == '1'),
+        staff: staff.firstWhere((s) => s.id == '2'),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       ),
@@ -733,13 +737,15 @@ class MockDataService {
         businessId: '1',
         branchId: '2', // 信義門店
         customerId: customers[1].id,
-        serviceId: services[1].id,
+        serviceId: services[1].id, // 女士剪髮
+        staffId: '3', // 張資深
         startTime: DateTime.now().add(const Duration(hours: 2)),
         endTime: DateTime.now().add(const Duration(hours: 3)),
         status: AppointmentStatus.confirmed,
         customer: customers[1],
         service: services[1],
         branch: branches.firstWhere((b) => b.id == '2'),
+        staff: staff.firstWhere((s) => s.id == '3'),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       ),
@@ -748,13 +754,15 @@ class MockDataService {
         businessId: '1',
         branchId: '1', // 總店
         customerId: customers[0].id,
-        serviceId: services[2].id,
+        serviceId: services[2].id, // 兒童剪髮
+        staffId: null, // 未指定員工
         startTime: DateTime.now().add(const Duration(hours: 3)),
         endTime: DateTime.now().add(const Duration(hours: 4)),
         status: AppointmentStatus.checked_in,
         customer: customers[0],
         service: services[2],
         branch: branches.firstWhere((b) => b.id == '1'),
+        staff: null,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       ),
@@ -763,13 +771,15 @@ class MockDataService {
         businessId: '1',
         branchId: '3', // 西門門店
         customerId: customers[1].id,
-        serviceId: services[3].id,
+        serviceId: services[3].id, // 瀏海修剪
+        staffId: '5', // 林造型
         startTime: DateTime.now().add(const Duration(days: 1, hours: 1)),
         endTime: DateTime.now().add(const Duration(days: 1, hours: 2)),
         status: AppointmentStatus.booked,
         customer: customers[1],
         service: services[3],
         branch: branches.firstWhere((b) => b.id == '3'),
+        staff: staff.firstWhere((s) => s.id == '5'),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       ),
@@ -778,13 +788,15 @@ class MockDataService {
         businessId: '1',
         branchId: '4', // 板橋門店
         customerId: customers[0].id,
-        serviceId: services[4].id,
+        serviceId: services[4].id, // 造型剪髮
+        staffId: '5', // 林造型
         startTime: DateTime.now().add(const Duration(days: 1, hours: 3)),
         endTime: DateTime.now().add(const Duration(days: 1, hours: 4)),
         status: AppointmentStatus.confirmed,
         customer: customers[0],
         service: services[4],
         branch: branches.firstWhere((b) => b.id == '4'),
+        staff: staff.firstWhere((s) => s.id == '5'),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       ),
@@ -793,13 +805,15 @@ class MockDataService {
         businessId: '1',
         branchId: '5', // 天母門店
         customerId: customers[1].id,
-        serviceId: services[5].id,
+        serviceId: services[5].id, // 洗剪吹
+        staffId: '3', // 張資深
         startTime: DateTime.now().add(const Duration(days: 2, hours: 2)),
         endTime: DateTime.now().add(const Duration(days: 2, hours: 3)),
         status: AppointmentStatus.completed,
         customer: customers[1],
         service: services[5],
         branch: branches.firstWhere((b) => b.id == '5'),
+        staff: staff.firstWhere((s) => s.id == '3'),
         createdAt: DateTime.now().subtract(const Duration(days: 1)),
         updatedAt: DateTime.now().subtract(const Duration(days: 1)),
       ),
@@ -808,13 +822,15 @@ class MockDataService {
         businessId: '1',
         branchId: '6', // 內湖門店
         customerId: customers[0].id,
-        serviceId: services[6].id,
+        serviceId: services[6].id, // 染髮
+        staffId: null, // 未指定員工
         startTime: DateTime.now().add(const Duration(days: 3, hours: 1)),
         endTime: DateTime.now().add(const Duration(days: 3, hours: 2)),
         status: AppointmentStatus.booked,
         customer: customers[0],
         service: services[6],
         branch: branches.firstWhere((b) => b.id == '6'),
+        staff: null,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       ),
@@ -824,13 +840,15 @@ class MockDataService {
         businessId: '1',
         branchId: '1', // 總店
         customerId: customers[1].id,
-        serviceId: services[7].id,
+        serviceId: services[7].id, // 燙髮
+        staffId: '3', // 張資深
         startTime: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 10, 0),
         endTime: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 11, 30),
         status: AppointmentStatus.confirmed,
         customer: customers[1],
         service: services[7],
         branch: branches.firstWhere((b) => b.id == '1'),
+        staff: staff.firstWhere((s) => s.id == '3'),
         createdAt: DateTime.now().subtract(const Duration(days: 2)),
         updatedAt: DateTime.now().subtract(const Duration(days: 2)),
       ),
@@ -839,13 +857,15 @@ class MockDataService {
         businessId: '1',
         branchId: '2', // 信義門店
         customerId: customers[0].id,
-        serviceId: services[8].id,
+        serviceId: services[8].id, // 深層護髮
+        staffId: '3', // 張資深
         startTime: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 14, 0),
         endTime: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 15, 0),
         status: AppointmentStatus.booked,
         customer: customers[0],
         service: services[8],
         branch: branches.firstWhere((b) => b.id == '2'),
+        staff: staff.firstWhere((s) => s.id == '3'),
         createdAt: DateTime.now().subtract(const Duration(days: 1)),
         updatedAt: DateTime.now().subtract(const Duration(days: 1)),
       ),
@@ -854,15 +874,52 @@ class MockDataService {
         businessId: '1',
         branchId: '3', // 西門門店
         customerId: customers[1].id,
-        serviceId: services[9].id,
+        serviceId: services[9].id, // 基礎美甲
+        staffId: '4', // 陳設計
         startTime: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 16, 30),
         endTime: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 17, 30),
         status: AppointmentStatus.checked_in,
         customer: customers[1],
         service: services[9],
         branch: branches.firstWhere((b) => b.id == '3'),
+        staff: staff.firstWhere((s) => s.id == '4'),
         createdAt: DateTime.now().subtract(const Duration(hours: 2)),
         updatedAt: DateTime.now().subtract(const Duration(hours: 1)),
+      ),
+      // 新增更多預約以展示不同的員工分配
+      Appointment(
+        id: '11',
+        businessId: '1',
+        branchId: '1', // 總店
+        customerId: customers[0].id,
+        serviceId: services[20].id, // 霧眉
+        staffId: '6', // 周紋藝（半永久化妝師）
+        startTime: DateTime.now().add(const Duration(days: 5, hours: 2)),
+        endTime: DateTime.now().add(const Duration(days: 5, hours: 5)),
+        status: AppointmentStatus.booked,
+        customer: customers[0],
+        service: services[20],
+        branch: branches.firstWhere((b) => b.id == '1'),
+        staff: staff.firstWhere((s) => s.id == '6'),
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      ),
+      Appointment(
+        id: '12',
+        businessId: '1',
+        branchId: '2', // 信義門店
+        customerId: customers[1].id,
+        serviceId: services[13].id, // 睫毛嫁接
+        staffId: null, // 未指定員工
+        startTime: DateTime.now().add(const Duration(days: 7, hours: 3)),
+        endTime: DateTime.now().add(const Duration(days: 7, hours: 5)),
+        status: AppointmentStatus.booked,
+        customer: customers[1],
+        service: services[13],
+        branch: branches.firstWhere((b) => b.id == '2'),
+        staff: null,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       ),
     ];
   }
@@ -1220,5 +1277,250 @@ class MockDataService {
         updatedAt: now,
       ),
     ];
+  }
+
+  // Mock staff schedules data
+  static List<StaffSchedule> getMockStaffSchedules(String businessId) {
+    final now = DateTime.now();
+    final staff = getMockStaff(businessId);
+    final branches = getMockBranches(businessId);
+    
+    List<StaffSchedule> schedules = [];
+    
+    // 生成本週和下週的班表
+    for (int weekOffset = 0; weekOffset < 2; weekOffset++) {
+      for (int dayOffset = 0; dayOffset < 7; dayOffset++) {
+        final date = now.add(Duration(days: weekOffset * 7 + dayOffset - now.weekday + 1));
+        
+        for (int staffIndex = 0; staffIndex < staff.length && staffIndex < 8; staffIndex++) {
+          final currentStaff = staff[staffIndex];
+          
+          // 跳過請假員工
+          if (currentStaff.status != StaffStatus.active) continue;
+          
+          // 根據員工角色和日期生成不同的排班
+          StaffSchedule? schedule;
+          
+          switch (currentStaff.role) {
+            case StaffRole.owner:
+              // 店主：每天全日班
+              schedule = StaffSchedule(
+                id: '${weekOffset}_${dayOffset}_${staffIndex}',
+                staffId: currentStaff.id,
+                branchId: currentStaff.branchIds.isNotEmpty ? currentStaff.branchIds[0] : '1',
+                date: date,
+                shiftType: ShiftType.full_day,
+                startTime: '09:00',
+                endTime: '19:00',
+                status: ScheduleStatus.confirmed,
+                createdAt: now,
+                updatedAt: now,
+                staffName: currentStaff.name,
+                branchName: branches.firstWhere((b) => b.id == (currentStaff.branchIds.isNotEmpty ? currentStaff.branchIds[0] : '1')).name,
+              );
+              break;
+              
+            case StaffRole.manager:
+              // 經理：平日全日班，週末早班
+              if (date.weekday <= 5) {
+                schedule = StaffSchedule(
+                  id: '${weekOffset}_${dayOffset}_${staffIndex}',
+                  staffId: currentStaff.id,
+                  branchId: currentStaff.branchIds.isNotEmpty ? currentStaff.branchIds[0] : '1',
+                  date: date,
+                  shiftType: ShiftType.full_day,
+                  startTime: '10:00',
+                  endTime: '18:00',
+                  status: ScheduleStatus.confirmed,
+                  createdAt: now,
+                  updatedAt: now,
+                  staffName: currentStaff.name,
+                  branchName: branches.firstWhere((b) => b.id == (currentStaff.branchIds.isNotEmpty ? currentStaff.branchIds[0] : '1')).name,
+                );
+              } else if (date.weekday == 6) {
+                schedule = StaffSchedule(
+                  id: '${weekOffset}_${dayOffset}_${staffIndex}',
+                  staffId: currentStaff.id,
+                  branchId: currentStaff.branchIds.isNotEmpty ? currentStaff.branchIds[0] : '1',
+                  date: date,
+                  shiftType: ShiftType.morning,
+                  startTime: '09:00',
+                  endTime: '13:00',
+                  status: ScheduleStatus.scheduled,
+                  createdAt: now,
+                  updatedAt: now,
+                  staffName: currentStaff.name,
+                  branchName: branches.firstWhere((b) => b.id == (currentStaff.branchIds.isNotEmpty ? currentStaff.branchIds[0] : '1')).name,
+                );
+              }
+              // 週日休假
+              break;
+              
+            case StaffRole.senior_stylist:
+              // 資深設計師：輪班制
+              final shiftIndex = (dayOffset + staffIndex) % 3;
+              ShiftType shiftType;
+              String startTime, endTime;
+              
+              switch (shiftIndex) {
+                case 0:
+                  shiftType = ShiftType.morning;
+                  startTime = '09:00';
+                  endTime = '13:00';
+                  break;
+                case 1:
+                  shiftType = ShiftType.afternoon;
+                  startTime = '13:00';
+                  endTime = '18:00';
+                  break;
+                case 2:
+                  shiftType = ShiftType.evening;
+                  startTime = '18:00';
+                  endTime = '22:00';
+                  break;
+                default:
+                  shiftType = ShiftType.off;
+                  startTime = '';
+                  endTime = '';
+              }
+              
+              if (date.weekday == 7 && shiftIndex == 2) {
+                // 週日晚班改為休假
+                shiftType = ShiftType.off;
+                startTime = '';
+                endTime = '';
+              }
+              
+              schedule = StaffSchedule(
+                id: '${weekOffset}_${dayOffset}_${staffIndex}',
+                staffId: currentStaff.id,
+                branchId: currentStaff.branchIds.isNotEmpty ? currentStaff.branchIds[dayOffset % currentStaff.branchIds.length] : '1',
+                date: date,
+                shiftType: shiftType,
+                startTime: startTime.isNotEmpty ? startTime : null,
+                endTime: endTime.isNotEmpty ? endTime : null,
+                status: shiftType == ShiftType.off ? ScheduleStatus.scheduled : ScheduleStatus.confirmed,
+                createdAt: now,
+                updatedAt: now,
+                staffName: currentStaff.name,
+                branchName: branches.firstWhere((b) => b.id == (currentStaff.branchIds.isNotEmpty ? currentStaff.branchIds[dayOffset % currentStaff.branchIds.length] : '1')).name,
+              );
+              break;
+              
+            case StaffRole.stylist:
+              // 設計師：平日午班或晚班，週末早班
+              if (date.weekday <= 5) {
+                final isAfternoon = (dayOffset + staffIndex) % 2 == 0;
+                schedule = StaffSchedule(
+                  id: '${weekOffset}_${dayOffset}_${staffIndex}',
+                  staffId: currentStaff.id,
+                  branchId: currentStaff.branchIds.isNotEmpty ? currentStaff.branchIds[dayOffset % currentStaff.branchIds.length] : '1',
+                  date: date,
+                  shiftType: isAfternoon ? ShiftType.afternoon : ShiftType.evening,
+                  startTime: isAfternoon ? '13:00' : '18:00',
+                  endTime: isAfternoon ? '18:00' : '22:00',
+                  status: ScheduleStatus.scheduled,
+                  createdAt: now,
+                  updatedAt: now,
+                  staffName: currentStaff.name,
+                  branchName: branches.firstWhere((b) => b.id == (currentStaff.branchIds.isNotEmpty ? currentStaff.branchIds[dayOffset % currentStaff.branchIds.length] : '1')).name,
+                );
+              } else if (date.weekday == 6) {
+                schedule = StaffSchedule(
+                  id: '${weekOffset}_${dayOffset}_${staffIndex}',
+                  staffId: currentStaff.id,
+                  branchId: currentStaff.branchIds.isNotEmpty ? currentStaff.branchIds[0] : '1',
+                  date: date,
+                  shiftType: ShiftType.morning,
+                  startTime: '09:00',
+                  endTime: '13:00',
+                  status: ScheduleStatus.scheduled,
+                  createdAt: now,
+                  updatedAt: now,
+                  staffName: currentStaff.name,
+                  branchName: branches.firstWhere((b) => b.id == (currentStaff.branchIds.isNotEmpty ? currentStaff.branchIds[0] : '1')).name,
+                );
+              }
+              break;
+              
+            case StaffRole.assistant:
+              // 助理：早班或午班
+              if (date.weekday <= 6) {
+                final isMorning = (dayOffset + staffIndex) % 2 == 0;
+                schedule = StaffSchedule(
+                  id: '${weekOffset}_${dayOffset}_${staffIndex}',
+                  staffId: currentStaff.id,
+                  branchId: currentStaff.branchIds.isNotEmpty ? currentStaff.branchIds[0] : '1',
+                  date: date,
+                  shiftType: isMorning ? ShiftType.morning : ShiftType.afternoon,
+                  startTime: isMorning ? '09:00' : '13:00',
+                  endTime: isMorning ? '13:00' : '18:00',
+                  status: ScheduleStatus.scheduled,
+                  createdAt: now,
+                  updatedAt: now,
+                  staffName: currentStaff.name,
+                  branchName: branches.firstWhere((b) => b.id == (currentStaff.branchIds.isNotEmpty ? currentStaff.branchIds[0] : '1')).name,
+                );
+              }
+              break;
+              
+            case StaffRole.receptionist:
+              // 接待員：全日班
+              if (date.weekday <= 6) {
+                schedule = StaffSchedule(
+                  id: '${weekOffset}_${dayOffset}_${staffIndex}',
+                  staffId: currentStaff.id,
+                  branchId: currentStaff.branchIds.isNotEmpty ? currentStaff.branchIds[dayOffset % currentStaff.branchIds.length] : '1',
+                  date: date,
+                  shiftType: ShiftType.full_day,
+                  startTime: '10:00',
+                  endTime: '19:00',
+                  status: ScheduleStatus.confirmed,
+                  createdAt: now,
+                  updatedAt: now,
+                  staffName: currentStaff.name,
+                  branchName: branches.firstWhere((b) => b.id == (currentStaff.branchIds.isNotEmpty ? currentStaff.branchIds[dayOffset % currentStaff.branchIds.length] : '1')).name,
+                );
+              }
+              break;
+          }
+          
+          if (schedule != null) {
+            schedules.add(schedule);
+          }
+        }
+      }
+    }
+    
+    // 添加一些請假記錄
+    schedules.add(StaffSchedule(
+      id: 'leave_1',
+      staffId: staff.length > 3 ? staff[3].id : '4',
+      branchId: '1',
+      date: now.add(const Duration(days: 3)),
+      shiftType: ShiftType.off,
+      status: ScheduleStatus.requested_off,
+      notes: '個人事務',
+      createdAt: now,
+      updatedAt: now,
+      staffName: staff.length > 3 ? staff[3].name : '陳設計',
+      branchName: '總店',
+    ));
+    
+    schedules.add(StaffSchedule(
+      id: 'leave_2',
+      staffId: staff.length > 4 ? staff[4].id : '5',
+      branchId: '3',
+      date: now.add(const Duration(days: 5)),
+      shiftType: ShiftType.off,
+      status: ScheduleStatus.sick_leave,
+      notes: '感冒就醫',
+      createdAt: now,
+      updatedAt: now,
+      staffName: staff.length > 4 ? staff[4].name : '林造型',
+      branchName: '西門門店',
+    ));
+    
+    return schedules;
   }
 } 

@@ -6,6 +6,7 @@ import '../models/branch.dart';
 import '../services/mock_api_service.dart';
 import '../widgets/appointment_card.dart';
 import '../widgets/appointment_form_dialog.dart';
+import 'staff_schedule_screen.dart';
 
 class AppointmentScreen extends StatefulWidget {
   final String businessId;
@@ -455,8 +456,61 @@ class _AppointmentScreenState extends State<AppointmentScreen> with SingleTicker
   }
 
   Widget _buildStaffScheduleView() {
-    return const Center(
-      child: Text('員工排程視圖（待實現）'),
+    return Container(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.schedule,
+            size: 80,
+            color: Colors.blue.shade300,
+          ),
+          const SizedBox(height: 24),
+          const Text(
+            '員工班表管理',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            '查看和編輯員工的工作班表\n支持週視圖和月視圖，輕鬆管理排班',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey,
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 32),
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const StaffScheduleScreen(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.calendar_view_week),
+            label: const Text('進入班表管理'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF6C5CE7),
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24,
+                vertical: 16,
+              ),
+              textStyle: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -471,7 +525,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> with SingleTicker
           controller: _tabController,
           tabs: const [
             Tab(text: '預約日曆'),
-            Tab(text: '員工排程'),
+            Tab(text: '員工班表'),
           ],
         ),
       ),

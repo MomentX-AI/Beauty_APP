@@ -4,6 +4,7 @@ import '../models/appointment.dart';
 import '../models/customer.dart';
 import '../models/service.dart';
 import '../models/branch.dart';
+import '../models/staff.dart';
 import '../services/mock_data_service.dart';
 
 class AppointmentFormDialog extends StatefulWidget {
@@ -29,11 +30,14 @@ class _AppointmentFormDialogState extends State<AppointmentFormDialog> {
   String? _selectedCustomerId;
   String? _selectedServiceId;
   String? _selectedBranchId;
+  String? _selectedStaffId;
   TimeOfDay _selectedTime = TimeOfDay.now();
   final _noteController = TextEditingController();
   List<Customer> _customers = [];
   List<Service> _services = [];
   List<Branch> _branches = [];
+  List<Staff> _staff = [];
+  List<Staff> _availableStaff = [];
   bool _isLoading = true;
 
   @override
@@ -45,10 +49,11 @@ class _AppointmentFormDialogState extends State<AppointmentFormDialog> {
   Future<void> _loadData() async {
     setState(() => _isLoading = true);
     try {
-      // Load customers, services, and branches
+      // Load customers, services, branches, and staff
       final customers = await MockDataService.getMockCustomers();
       final services = await MockDataService.getMockServices();
       final branches = MockDataService.getMockBranches(widget.businessId);
+      final staff = MockDataService.getMockStaff(widget.businessId);
       
       if (!mounted) return;
       
@@ -56,12 +61,14 @@ class _AppointmentFormDialogState extends State<AppointmentFormDialog> {
         _customers = customers;
         _services = services;
         _branches = branches;
+        _staff = staff;
         
         // If editing an existing appointment, set the selected values
         if (widget.appointment != null) {
           _selectedCustomerId = widget.appointment!.customerId;
           _selectedServiceId = widget.appointment!.serviceId;
           _selectedBranchId = widget.appointment!.branchId;
+          _selectedStaffId = widget.appointment!.staffId;
           _selectedTime = TimeOfDay.fromDateTime(widget.appointment!.startTime);
           _noteController.text = widget.appointment!.note ?? '';
         } else {
@@ -77,6 +84,8 @@ class _AppointmentFormDialogState extends State<AppointmentFormDialog> {
           }
         }
         
+        // Update available staff based on selected branch and service
+        _updateAvailableStaff();
         _isLoading = false;
       });
     } catch (e) {
@@ -87,6 +96,40 @@ class _AppointmentFormDialogState extends State<AppointmentFormDialog> {
         SnackBar(content: Text('載入資料失敗: $e')),
       );
     }
+  }
+
+  void _updateAvailableStaff() {
+    if (_selectedBranchId == null || _selectedServiceId == null) {
+      setState(() {
+        _availableStaff = [];
+        _selectedStaffId = null;
+      });
+      return;
+    }
+
+    // Filter staff based on selected branch and service
+    final availableStaff = _staff.where((staff) {
+      // Check if staff works at the selected branch
+      final worksAtBranch = staff.branchIds.contains(_selectedBranchId);
+      
+      // Check if staff can provide the selected service
+      final canProvideService = staff.serviceIds.contains(_selectedServiceId);
+      
+      // Check if staff is active
+      final isActive = staff.status == StaffStatus.active;
+      
+      return worksAtBranch && canProvideService && isActive;
+    }).toList();
+
+    setState(() {
+      _availableStaff = availableStaff;
+      
+      // Reset selected staff if they're no longer available
+      if (_selectedStaffId != null && 
+          !availableStaff.any((staff) => staff.id == _selectedStaffId)) {
+        _selectedStaffId = null;
+      }
+    });
   }
 
   Future<void> _selectTime() async {
@@ -123,6 +166,7 @@ class _AppointmentFormDialogState extends State<AppointmentFormDialog> {
         branchId: _selectedBranchId!,
         customerId: _selectedCustomerId!,
         serviceId: _selectedServiceId!,
+        staffId: _selectedStaffId, // Add staff assignment
         startTime: startTime,
         endTime: endTime,
         status: widget.appointment?.status ?? AppointmentStatus.booked,
@@ -202,6 +246,7 @@ class _AppointmentFormDialogState extends State<AppointmentFormDialog> {
                                 setState(() {
                                   _selectedBranchId = newValueId;
                                 });
+                                _updateAvailableStaff();
                               }
                             },
                             hint: const Text('請選擇門店'),
@@ -302,10 +347,115 @@ class _AppointmentFormDialogState extends State<AppointmentFormDialog> {
                                 setState(() {
                                   _selectedServiceId = newValueId;
                                 });
+                                _updateAvailableStaff();
                               }
                             },
                             hint: const Text('請選擇服務項目'),
                           ),
+                        ),
+                      ),
+
+                    // 指定員工下拉選單
+                    Container(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: InputDecorator(
+                        decoration: const InputDecoration(
+                          labelText: '指定員工（可選）',
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        ),
+                        child: DropdownButton<String>(
+                          value: _selectedStaffId,
+                          isExpanded: true,
+                          underline: Container(),
+                          items: [
+                            // 添加"不指定"選項
+                            const DropdownMenuItem<String>(
+                              value: null,
+                              child: Row(
+                                children: [
+                                  Icon(Icons.person_off, size: 16, color: Colors.grey),
+                                  SizedBox(width: 8),
+                                  Text('不指定員工'),
+                                ],
+                              ),
+                            ),
+                            ..._availableStaff.map((Staff staff) {
+                              return DropdownMenuItem<String>(
+                                value: staff.id,
+                                child: Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 8,
+                                      backgroundColor: staff.roleColor.withOpacity(0.2),
+                                      child: Text(
+                                        staff.name.isNotEmpty ? staff.name[0] : 'S',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: staff.roleColor,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            staff.name,
+                                            style: const TextStyle(fontSize: 14),
+                                          ),
+                                          Text(
+                                            staff.roleText,
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: staff.roleColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }),
+                          ],
+                          onChanged: (String? newValueId) {
+                            setState(() {
+                              _selectedStaffId = newValueId;
+                            });
+                          },
+                          hint: const Text('請選擇員工'),
+                        ),
+                      ),
+                    ),
+
+                    // 顯示可用員工提示
+                    if (_selectedBranchId != null && _selectedServiceId != null)
+                      Container(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.info_outline,
+                              size: 16,
+                              color: _availableStaff.isEmpty ? Colors.orange : Colors.green,
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                _availableStaff.isEmpty
+                                    ? '此分店沒有可提供該服務的員工'
+                                    : '找到 ${_availableStaff.length} 位可提供該服務的員工',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: _availableStaff.isEmpty ? Colors.orange : Colors.green,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     
