@@ -8,6 +8,7 @@ import '../models/business_analysis.dart';
 import '../models/branch.dart';
 import '../models/branch_special_day.dart';
 import '../models/branch_service.dart';
+import '../models/staff.dart';
 
 class MockDataService {
   // Mock businesses data
@@ -1002,5 +1003,222 @@ class MockDataService {
     }
 
     return analyses.where((analysis) => analysis.businessId == businessId).toList();
+  }
+
+  // Mock staff data
+  static List<Staff> getMockStaff(String businessId) {
+    final now = DateTime.now();
+    
+    return [
+      // 店主
+      Staff(
+        id: '1',
+        businessId: businessId,
+        name: '王小美',
+        email: 'owner@beauty.com',
+        phone: '+886912345678',
+        role: StaffRole.owner,
+        status: StaffStatus.active,
+        hireDate: DateTime(2020, 1, 1),
+        birthDate: DateTime(1985, 5, 15),
+        address: '台北市中山區民生東路一段100號',
+        emergencyContact: '王大美',
+        emergencyPhone: '+886987654321',
+        notes: '創辦人兼主理人，擁有15年美髮經驗',
+        branchIds: ['1', '2', '3', '4', '5', '6'], // 可管理所有分店
+        serviceIds: ['1', '2', '5', '6', '7', '8', '9'], // 擅長美髮服務
+        createdAt: DateTime(2020, 1, 1),
+        updatedAt: now,
+      ),
+      
+      // 經理
+      Staff(
+        id: '2',
+        businessId: businessId,
+        name: '李經理',
+        email: 'manager@beauty.com',
+        phone: '+886923456789',
+        role: StaffRole.manager,
+        status: StaffStatus.active,
+        hireDate: DateTime(2021, 3, 15),
+        birthDate: DateTime(1988, 8, 20),
+        address: '台北市信義區松仁路88號',
+        emergencyContact: '李太太',
+        emergencyPhone: '+886987123456',
+        notes: '負責總店營運管理',
+        branchIds: ['1'], // 主要在總店
+        serviceIds: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'], // 多項服務
+        createdAt: DateTime(2021, 3, 15),
+        updatedAt: now,
+      ),
+      
+      // 資深設計師
+      Staff(
+        id: '3',
+        businessId: businessId,
+        name: '張資深',
+        email: 'senior@beauty.com',
+        phone: '+886934567890',
+        role: StaffRole.senior_stylist,
+        status: StaffStatus.active,
+        hireDate: DateTime(2019, 6, 1),
+        birthDate: DateTime(1990, 2, 10),
+        address: '台北市大安區敦化南路二段200號',
+        emergencyContact: '張先生',
+        emergencyPhone: '+886912987654',
+        notes: '專精染燙技術，客戶指名率高',
+        branchIds: ['1', '2'], // 總店和信義門店
+        serviceIds: ['2', '5', '6', '7', '8', '9', '17', '18', '19'], // 美髮和護膚
+        createdAt: DateTime(2019, 6, 1),
+        updatedAt: now,
+      ),
+      
+      // 設計師1
+      Staff(
+        id: '4',
+        businessId: businessId,
+        name: '陳設計',
+        email: 'stylist1@beauty.com',
+        phone: '+886945678901',
+        role: StaffRole.stylist,
+        status: StaffStatus.active,
+        hireDate: DateTime(2022, 8, 20),
+        birthDate: DateTime(1995, 11, 5),
+        address: '台北市松山區南京東路四段150號',
+        emergencyContact: '陳媽媽',
+        emergencyPhone: '+886976543210',
+        notes: '專精美甲服務，手藝精湛',
+        branchIds: ['1', '3'], // 總店和西門門店
+        serviceIds: ['10', '11', '12', '13', '14', '15', '16'], // 美甲和睫毛
+        createdAt: DateTime(2022, 8, 20),
+        updatedAt: now,
+      ),
+      
+      // 設計師2
+      Staff(
+        id: '5',
+        businessId: businessId,
+        name: '林造型',
+        email: 'stylist2@beauty.com',
+        phone: '+886956789012',
+        role: StaffRole.stylist,
+        status: StaffStatus.active,
+        hireDate: DateTime(2023, 2, 10),
+        birthDate: DateTime(1993, 7, 25),
+        address: '新北市板橋區中山路一段300號',
+        emergencyContact: '林爸爸',
+        emergencyPhone: '+886965432109',
+        notes: '年輕有活力，深受年輕客群喜愛',
+        branchIds: ['3', '4'], // 西門和板橋門店
+        serviceIds: ['1', '2', '3', '4', '6', '10', '11', '17', '20'], // 基礎美髮美甲
+        createdAt: DateTime(2023, 2, 10),
+        updatedAt: now,
+      ),
+      
+      // 半永久化妝師
+      Staff(
+        id: '6',
+        businessId: businessId,
+        name: '周紋藝',
+        email: 'pmu@beauty.com',
+        phone: '+886967890123',
+        role: StaffRole.senior_stylist,
+        status: StaffStatus.active,
+        hireDate: DateTime(2021, 11, 5),
+        birthDate: DateTime(1987, 4, 12),
+        address: '台北市士林區天母東路500號',
+        emergencyContact: '周先生',
+        emergencyPhone: '+886954321098',
+        notes: '半永久化妝專家，技術獲得多項認證',
+        branchIds: ['1', '2', '5'], // 總店、信義和天母門店
+        serviceIds: ['21', '22', '23', '24'], // 半永久化妝服務
+        createdAt: DateTime(2021, 11, 5),
+        updatedAt: now,
+      ),
+      
+      // 助理1
+      Staff(
+        id: '7',
+        businessId: businessId,
+        name: '吳助理',
+        email: 'assistant1@beauty.com',
+        phone: '+886978901234',
+        role: StaffRole.assistant,
+        status: StaffStatus.active,
+        hireDate: DateTime(2023, 9, 1),
+        birthDate: DateTime(1998, 12, 8),
+        address: '台北市內湖區成功路四段800號',
+        emergencyContact: '吳媽媽',
+        emergencyPhone: '+886943210987',
+        notes: '新人，學習態度積極',
+        branchIds: ['1', '6'], // 總店和內湖門店
+        serviceIds: ['4', '9', '13', '25', '26'], // 基礎服務和護理
+        createdAt: DateTime(2023, 9, 1),
+        updatedAt: now,
+      ),
+      
+      // 接待員1
+      Staff(
+        id: '8',
+        businessId: businessId,
+        name: '劉接待',
+        email: 'reception1@beauty.com',
+        phone: '+886989012345',
+        role: StaffRole.receptionist,
+        status: StaffStatus.active,
+        hireDate: DateTime(2022, 5, 15),
+        birthDate: DateTime(1996, 9, 30),
+        address: '台北市萬華區西門路700號',
+        emergencyContact: '劉姊姊',
+        emergencyPhone: '+886932109876',
+        notes: '親切有禮，客戶服務優秀',
+        branchIds: ['1', '2', '3'], // 總店、信義和西門門店
+        serviceIds: [], // 不提供技術服務
+        createdAt: DateTime(2022, 5, 15),
+        updatedAt: now,
+      ),
+      
+      // 接待員2
+      Staff(
+        id: '9',
+        businessId: businessId,
+        name: '黃接待',
+        email: 'reception2@beauty.com',
+        phone: '+886990123456',
+        role: StaffRole.receptionist,
+        status: StaffStatus.active,
+        hireDate: DateTime(2023, 7, 8),
+        birthDate: DateTime(1997, 6, 18),
+        address: '新北市板橋區文化路250號',
+        emergencyContact: '黃媽媽',
+        emergencyPhone: '+886921098765',
+        notes: '多語言能力，適合接待外國客戶',
+        branchIds: ['4', '5', '6'], // 板橋、天母和內湖門店
+        serviceIds: ['26'], // 僅提供按摩服務
+        createdAt: DateTime(2023, 7, 8),
+        updatedAt: now,
+      ),
+      
+      // 請假員工
+      Staff(
+        id: '10',
+        businessId: businessId,
+        name: '趙請假',
+        email: 'leave@beauty.com',
+        phone: '+886901234567',
+        role: StaffRole.stylist,
+        status: StaffStatus.on_leave,
+        hireDate: DateTime(2022, 1, 10),
+        birthDate: DateTime(1991, 3, 22),
+        address: '台北市中正區忠孝東路一段50號',
+        emergencyContact: '趙老公',
+        emergencyPhone: '+886910987654',
+        notes: '產假中，預計明年復職',
+        branchIds: ['2'], // 信義門店
+        serviceIds: ['2', '7', '8', '18', '19'], // 美髮和護膚
+        createdAt: DateTime(2022, 1, 10),
+        updatedAt: now,
+      ),
+    ];
   }
 } 

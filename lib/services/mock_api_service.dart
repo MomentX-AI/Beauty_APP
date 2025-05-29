@@ -8,6 +8,7 @@ import '../models/business_analysis.dart';
 import '../models/branch.dart';
 import '../models/branch_special_day.dart';
 import '../models/branch_service.dart';
+import '../models/staff.dart';
 import 'mock_data_service.dart';
 
 class MockApiService {
@@ -464,5 +465,43 @@ class MockApiService {
   
   Future<void> deleteBusinessAnalysis(String id) async {
     await Future.delayed(const Duration(milliseconds: 500));
+  }
+
+  // Staff API
+  Future<List<Staff>> getStaff(String businessId) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return MockDataService.getMockStaff(businessId);
+  }
+
+  Future<Staff> createStaff(Staff staff) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return staff;
+  }
+
+  Future<Staff> getStaffById(String id) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    final staff = await MockDataService.getMockStaff('1');
+    return staff.firstWhere((s) => s.id == id);
+  }
+
+  Future<Staff> updateStaff(String id, Staff staff) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return staff;
+  }
+
+  Future<void> deleteStaff(String id) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+  }
+
+  Future<List<Staff>> getStaffByBranch(String branchId) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    final allStaff = await MockDataService.getMockStaff('1');
+    return allStaff.where((s) => s.branchIds.contains(branchId)).toList();
+  }
+
+  Future<List<Staff>> getStaffByService(String serviceId) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    final allStaff = await MockDataService.getMockStaff('1');
+    return allStaff.where((s) => s.serviceIds.contains(serviceId)).toList();
   }
 } 
