@@ -198,6 +198,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     },
                   ),
                 ),
+                // 版本號
+                if (!_isSidebarCollapsed)
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        const Divider(
+                          color: Colors.grey,
+                          thickness: 0.5,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Version 1.0.0',
+                          style: TextStyle(
+                            color: Colors.grey.shade400,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
           ),
