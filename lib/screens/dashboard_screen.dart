@@ -8,6 +8,8 @@ import 'appointment_screen.dart';
 import 'ai_assistant_screen.dart';
 import 'dashboard_home_screen.dart';
 import 'staff_screen.dart';
+import 'subscription_management_screen.dart';
+import 'billing_management_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   final String businessId;
@@ -28,6 +30,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     {'icon': '員', 'title': '員工管理', 'isSelected': false},
     {'icon': '報', 'title': '業務分析報告', 'isSelected': false},
     {'icon': 'AI', 'title': 'AI 助理', 'isSelected': false},
+    {'icon': '方', 'title': '方案管理', 'isSelected': false},
+    {'icon': '帳', 'title': '帳單管理', 'isSelected': false},
     {'icon': '用', 'title': '用戶管理', 'isSelected': false},
   ];
 
@@ -61,6 +65,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
       case 6:
         return const AIAssistantScreen();
       case 7:
+        return SubscriptionManagementScreen(businessId: widget.businessId);
+      case 8:
+        return BillingManagementScreen(businessId: widget.businessId);
+      case 9:
         return const OwnerProfileScreen();
       default:
         return const DashboardHomeScreen();

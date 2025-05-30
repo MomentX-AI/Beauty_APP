@@ -9,6 +9,8 @@ import '../models/branch.dart';
 import '../models/branch_special_day.dart';
 import '../models/branch_service.dart';
 import '../models/staff.dart';
+import '../models/branch_performance.dart';
+import '../models/staff_performance.dart';
 import 'mock_data_service.dart';
 
 class MockApiService {
@@ -503,5 +505,233 @@ class MockApiService {
     await Future.delayed(const Duration(milliseconds: 500));
     final allStaff = await MockDataService.getMockStaff('1');
     return allStaff.where((s) => s.serviceIds.contains(serviceId)).toList();
+  }
+
+  // Performance Analysis API
+  Future<List<BranchPerformance>> getBranchPerformances(String businessId) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    
+    final now = DateTime.now();
+    final periodStart = DateTime(now.year, now.month, 1);
+    final periodEnd = DateTime(now.year, now.month + 1, 0);
+    
+    // 模擬門店表現數據
+    return [
+      BranchPerformance(
+        branchId: '1',
+        branchName: '總店',
+        monthlyRevenue: 45000,
+        appointmentCount: 67,
+        customerCount: 45,
+        averageServicePrice: 1200,
+        occupancyRate: 0.85,
+        staffCount: 4,
+        periodStart: periodStart,
+        periodEnd: periodEnd,
+      ),
+      BranchPerformance(
+        branchId: '2',
+        branchName: '信義門店',
+        monthlyRevenue: 38000,
+        appointmentCount: 52,
+        customerCount: 38,
+        averageServicePrice: 1150,
+        occupancyRate: 0.78,
+        staffCount: 3,
+        periodStart: periodStart,
+        periodEnd: periodEnd,
+      ),
+      BranchPerformance(
+        branchId: '3',
+        branchName: '西門門店',
+        monthlyRevenue: 28000,
+        appointmentCount: 41,
+        customerCount: 32,
+        averageServicePrice: 980,
+        occupancyRate: 0.72,
+        staffCount: 2,
+        periodStart: periodStart,
+        periodEnd: periodEnd,
+      ),
+      BranchPerformance(
+        branchId: '4',
+        branchName: '板橋門店',
+        monthlyRevenue: 35000,
+        appointmentCount: 48,
+        customerCount: 35,
+        averageServicePrice: 1100,
+        occupancyRate: 0.75,
+        staffCount: 3,
+        periodStart: periodStart,
+        periodEnd: periodEnd,
+      ),
+      BranchPerformance(
+        branchId: '5',
+        branchName: '天母門店',
+        monthlyRevenue: 42000,
+        appointmentCount: 59,
+        customerCount: 41,
+        averageServicePrice: 1250,
+        occupancyRate: 0.82,
+        staffCount: 3,
+        periodStart: periodStart,
+        periodEnd: periodEnd,
+      ),
+      BranchPerformance(
+        branchId: '6',
+        branchName: '內湖門店',
+        monthlyRevenue: 31000,
+        appointmentCount: 44,
+        customerCount: 29,
+        averageServicePrice: 1050,
+        occupancyRate: 0.70,
+        staffCount: 2,
+        periodStart: periodStart,
+        periodEnd: periodEnd,
+      ),
+    ];
+  }
+
+  Future<List<StaffPerformance>> getStaffPerformances(String businessId) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    
+    final now = DateTime.now();
+    final periodStart = DateTime(now.year, now.month, 1);
+    final periodEnd = DateTime(now.year, now.month + 1, 0);
+    
+    // 模擬員工表現數據 - 使用與MockDataService相匹配的員工ID
+    return [
+      StaffPerformance(
+        staffId: '1', // 王小美 - 店主
+        staffName: '王小美',
+        role: 'owner',
+        monthlyRevenue: 32000,
+        appointmentCount: 42,
+        customerCount: 35,
+        averageServicePrice: 1400,
+        customerSatisfactionScore: 4.8,
+        completedAppointments: 40,
+        cancelledAppointments: 2,
+        attendanceRate: 0.96,
+        periodStart: periodStart,
+        periodEnd: periodEnd,
+      ),
+      StaffPerformance(
+        staffId: '2', // 李經理 - 經理
+        staffName: '李經理',
+        role: 'manager',
+        monthlyRevenue: 28000,
+        appointmentCount: 35,
+        customerCount: 28,
+        averageServicePrice: 1350,
+        customerSatisfactionScore: 4.7,
+        completedAppointments: 33,
+        cancelledAppointments: 2,
+        attendanceRate: 0.94,
+        periodStart: periodStart,
+        periodEnd: periodEnd,
+      ),
+      StaffPerformance(
+        staffId: '3', // 張資深 - 資深設計師
+        staffName: '張資深',
+        role: 'senior_stylist',
+        monthlyRevenue: 29000,
+        appointmentCount: 39,
+        customerCount: 32,
+        averageServicePrice: 1300,
+        customerSatisfactionScore: 4.7,
+        completedAppointments: 37,
+        cancelledAppointments: 2,
+        attendanceRate: 0.95,
+        periodStart: periodStart,
+        periodEnd: periodEnd,
+      ),
+      StaffPerformance(
+        staffId: '4', // 陳設計 - 設計師
+        staffName: '陳設計',
+        role: 'stylist',
+        monthlyRevenue: 25000,
+        appointmentCount: 38,
+        customerCount: 30,
+        averageServicePrice: 1100,
+        customerSatisfactionScore: 4.6,
+        completedAppointments: 36,
+        cancelledAppointments: 2,
+        attendanceRate: 0.92,
+        periodStart: periodStart,
+        periodEnd: periodEnd,
+      ),
+      StaffPerformance(
+        staffId: '5', // 林造型 - 設計師
+        staffName: '林造型',
+        role: 'stylist',
+        monthlyRevenue: 22000,
+        appointmentCount: 33,
+        customerCount: 26,
+        averageServicePrice: 1050,
+        customerSatisfactionScore: 4.5,
+        completedAppointments: 31,
+        cancelledAppointments: 2,
+        attendanceRate: 0.90,
+        periodStart: periodStart,
+        periodEnd: periodEnd,
+      ),
+      StaffPerformance(
+        staffId: '6', // 周紋藝 - 半永久化妝師
+        staffName: '周紋藝',
+        role: 'senior_stylist',
+        monthlyRevenue: 35000,
+        appointmentCount: 25,
+        customerCount: 22,
+        averageServicePrice: 2800,
+        customerSatisfactionScore: 4.9,
+        completedAppointments: 24,
+        cancelledAppointments: 1,
+        attendanceRate: 0.98,
+        periodStart: periodStart,
+        periodEnd: periodEnd,
+      ),
+      StaffPerformance(
+        staffId: '7', // 吳助理 - 助理
+        staffName: '吳助理',
+        role: 'assistant',
+        monthlyRevenue: 18000,
+        appointmentCount: 45,
+        customerCount: 35,
+        averageServicePrice: 650,
+        customerSatisfactionScore: 4.3,
+        completedAppointments: 42,
+        cancelledAppointments: 3,
+        attendanceRate: 0.88,
+        periodStart: periodStart,
+        periodEnd: periodEnd,
+      ),
+    ];
+  }
+
+  Future<BranchPerformance> getBranchPerformance(String branchId) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    final performances = await getBranchPerformances('business_001');
+    return performances.firstWhere((p) => p.branchId == branchId);
+  }
+
+  Future<StaffPerformance> getStaffPerformance(String staffId) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    final performances = await getStaffPerformances('business_001');
+    return performances.firstWhere((p) => p.staffId == staffId);
+  }
+
+  Future<List<StaffPerformance>> getStaffPerformancesByBranch(String businessId, String branchId) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    
+    // 先獲取該門店的員工
+    final branchStaff = await getStaffByBranch(branchId);
+    final branchStaffIds = branchStaff.map((s) => s.id).toSet();
+    
+    // 再獲取所有員工績效
+    final allPerformances = await getStaffPerformances(businessId);
+    
+    // 根據員工ID篩選績效
+    return allPerformances.where((p) => branchStaffIds.contains(p.staffId)).toList();
   }
 } 

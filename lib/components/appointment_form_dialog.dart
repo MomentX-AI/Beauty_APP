@@ -7,6 +7,7 @@ import '../models/service.dart';
 class AppointmentFormDialog extends StatefulWidget {
   final Appointment? appointment;
   final String businessId;
+  final String? branchId;
   final List<Customer> customers;
   final List<Service> services;
   final Function(Appointment) onSave;
@@ -15,6 +16,7 @@ class AppointmentFormDialog extends StatefulWidget {
     Key? key,
     this.appointment,
     required this.businessId,
+    this.branchId,
     required this.customers,
     required this.services,
     required this.onSave,
@@ -53,6 +55,7 @@ class _AppointmentFormDialogState extends State<AppointmentFormDialog> {
     final appointment = Appointment(
       id: widget.appointment?.id ?? const Uuid().v4(),
       businessId: widget.businessId,
+      branchId: widget.branchId ?? widget.appointment?.branchId ?? '1',
       customerId: _selectedCustomerId,
       serviceId: _selectedServiceId,
       startTime: _startTime,
