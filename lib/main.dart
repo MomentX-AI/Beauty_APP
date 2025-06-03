@@ -4,6 +4,7 @@ import 'screens/register_screen.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/subscription_management_screen.dart';
 import 'screens/billing_management_screen.dart';
+import 'screens/staff_performance_analysis_screen.dart';
 import 'services/auth_service.dart';
 import 'services/mock_api_service.dart';
 
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
         '/dashboard': (context) => const DashboardScreen(businessId: defaultBusinessId),
         '/subscription': (context) => const SubscriptionManagementScreen(businessId: defaultBusinessId),
         '/billing': (context) => const BillingManagementScreen(businessId: defaultBusinessId),
+        '/staff-performance-analysis': (context) => const StaffPerformanceAnalysisScreen(),
       },
     );
   }

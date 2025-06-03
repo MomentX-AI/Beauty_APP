@@ -10,6 +10,7 @@ import '../models/branch_special_day.dart';
 import '../models/branch_service.dart';
 import '../models/staff.dart';
 import '../models/staff_schedule.dart';
+import '../models/staff_performance_analysis.dart';
 
 class MockDataService {
   // Mock businesses data
@@ -1617,5 +1618,291 @@ class MockDataService {
     ));
     
     return schedules;
+  }
+
+  // Mock staff performance analysis data
+  static StaffPerformanceAnalysis getMockStaffPerformanceAnalysis(String staffId, DateTime periodStart, DateTime periodEnd) {
+    final staff = getMockStaff('1').firstWhere((s) => s.id == staffId);
+    
+    // 根據員工ID生成不同的績效數據
+    switch (staffId) {
+      case '1': // 王小美 - 店主
+        return StaffPerformanceAnalysis(
+          staffId: staffId,
+          staffName: staff.name,
+          role: staff.role.toString().split('.').last,
+          totalRevenue: 32000,
+          totalAppointmentCount: 42,
+          totalCustomerCount: 35,
+          averageServicePrice: 1400,
+          periodStart: periodStart,
+          periodEnd: periodEnd,
+          branchPerformances: [
+            StaffPerformanceByBranch(
+              branchId: '1',
+              branchName: '總店',
+              revenue: 20000,
+              appointmentCount: 25,
+              customerCount: 20,
+              averageServicePrice: 1500,
+              servicePerformances: [
+                ServicePerformance(
+                  serviceId: '2',
+                  serviceName: '女士剪髮',
+                  serviceCategory: '美髮',
+                  revenue: 12000,
+                  appointmentCount: 15,
+                  averagePrice: 800,
+                  revenuePercentage: 37.5,
+                ),
+                ServicePerformance(
+                  serviceId: '8',
+                  serviceName: '女士染髮',
+                  serviceCategory: '美髮',
+                  revenue: 8000,
+                  appointmentCount: 10,
+                  averagePrice: 800,
+                  revenuePercentage: 25.0,
+                ),
+              ],
+            ),
+            StaffPerformanceByBranch(
+              branchId: '2',
+              branchName: '信義門店',
+              revenue: 12000,
+              appointmentCount: 17,
+              customerCount: 15,
+              averageServicePrice: 1300,
+              servicePerformances: [
+                ServicePerformance(
+                  serviceId: '2',
+                  serviceName: '女士剪髮',
+                  serviceCategory: '美髮',
+                  revenue: 7200,
+                  appointmentCount: 9,
+                  averagePrice: 800,
+                  revenuePercentage: 22.5,
+                ),
+                ServicePerformance(
+                  serviceId: '3',
+                  serviceName: '護髮護理',
+                  serviceCategory: '美髮',
+                  revenue: 4800,
+                  appointmentCount: 8,
+                  averagePrice: 600,
+                  revenuePercentage: 15.0,
+                ),
+              ],
+            ),
+          ],
+          overallServicePerformances: [
+            ServicePerformance(
+              serviceId: '2',
+              serviceName: '女士剪髮',
+              serviceCategory: '美髮',
+              revenue: 19200,
+              appointmentCount: 24,
+              averagePrice: 800,
+              revenuePercentage: 60.0,
+            ),
+            ServicePerformance(
+              serviceId: '8',
+              serviceName: '女士染髮',
+              serviceCategory: '美髮',
+              revenue: 8000,
+              appointmentCount: 10,
+              averagePrice: 800,
+              revenuePercentage: 25.0,
+            ),
+            ServicePerformance(
+              serviceId: '3',
+              serviceName: '護髮護理',
+              serviceCategory: '美髮',
+              revenue: 4800,
+              appointmentCount: 8,
+              averagePrice: 600,
+              revenuePercentage: 15.0,
+            ),
+          ],
+        );
+
+      case '3': // 張資深 - 資深設計師
+        return StaffPerformanceAnalysis(
+          staffId: staffId,
+          staffName: staff.name,
+          role: staff.role.toString().split('.').last,
+          totalRevenue: 29000,
+          totalAppointmentCount: 39,
+          totalCustomerCount: 32,
+          averageServicePrice: 1300,
+          periodStart: periodStart,
+          periodEnd: periodEnd,
+          branchPerformances: [
+            StaffPerformanceByBranch(
+              branchId: '1',
+              branchName: '總店',
+              revenue: 15000,
+              appointmentCount: 20,
+              customerCount: 16,
+              averageServicePrice: 1200,
+              servicePerformances: [
+                ServicePerformance(
+                  serviceId: '2',
+                  serviceName: '女士剪髮',
+                  serviceCategory: '美髮',
+                  revenue: 8000,
+                  appointmentCount: 10,
+                  averagePrice: 800,
+                  revenuePercentage: 27.6,
+                ),
+                ServicePerformance(
+                  serviceId: '1',
+                  serviceName: '男士剪髮',
+                  serviceCategory: '美髮',
+                  revenue: 7000,
+                  appointmentCount: 10,
+                  averagePrice: 700,
+                  revenuePercentage: 24.1,
+                ),
+              ],
+            ),
+            StaffPerformanceByBranch(
+              branchId: '3',
+              branchName: '西門門店',
+              revenue: 14000,
+              appointmentCount: 19,
+              customerCount: 16,
+              averageServicePrice: 1400,
+              servicePerformances: [
+                ServicePerformance(
+                  serviceId: '8',
+                  serviceName: '女士染髮',
+                  serviceCategory: '美髮',
+                  revenue: 8000,
+                  appointmentCount: 10,
+                  averagePrice: 800,
+                  revenuePercentage: 27.6,
+                ),
+                ServicePerformance(
+                  serviceId: '9',
+                  serviceName: '男士染髮',
+                  serviceCategory: '美髮',
+                  revenue: 6000,
+                  appointmentCount: 9,
+                  averagePrice: 667,
+                  revenuePercentage: 20.7,
+                ),
+              ],
+            ),
+          ],
+          overallServicePerformances: [
+            ServicePerformance(
+              serviceId: '8',
+              serviceName: '女士染髮',
+              serviceCategory: '美髮',
+              revenue: 8000,
+              appointmentCount: 10,
+              averagePrice: 800,
+              revenuePercentage: 27.6,
+            ),
+            ServicePerformance(
+              serviceId: '2',
+              serviceName: '女士剪髮',
+              serviceCategory: '美髮',
+              revenue: 8000,
+              appointmentCount: 10,
+              averagePrice: 800,
+              revenuePercentage: 27.6,
+            ),
+            ServicePerformance(
+              serviceId: '1',
+              serviceName: '男士剪髮',
+              serviceCategory: '美髮',
+              revenue: 7000,
+              appointmentCount: 10,
+              averagePrice: 700,
+              revenuePercentage: 24.1,
+            ),
+            ServicePerformance(
+              serviceId: '9',
+              serviceName: '男士染髮',
+              serviceCategory: '美髮',
+              revenue: 6000,
+              appointmentCount: 9,
+              averagePrice: 667,
+              revenuePercentage: 20.7,
+            ),
+          ],
+        );
+
+      default:
+        // 為其他員工提供基本的績效數據
+        return StaffPerformanceAnalysis(
+          staffId: staffId,
+          staffName: staff.name,
+          role: staff.role.toString().split('.').last,
+          totalRevenue: 18000,
+          totalAppointmentCount: 25,
+          totalCustomerCount: 20,
+          averageServicePrice: 720,
+          periodStart: periodStart,
+          periodEnd: periodEnd,
+          branchPerformances: [
+            StaffPerformanceByBranch(
+              branchId: '1',
+              branchName: '總店',
+              revenue: 18000,
+              appointmentCount: 25,
+              customerCount: 20,
+              averageServicePrice: 720,
+              servicePerformances: [
+                ServicePerformance(
+                  serviceId: '2',
+                  serviceName: '女士剪髮',
+                  serviceCategory: '美髮',
+                  revenue: 12000,
+                  appointmentCount: 15,
+                  averagePrice: 800,
+                  revenuePercentage: 66.7,
+                ),
+                ServicePerformance(
+                  serviceId: '1',
+                  serviceName: '男士剪髮',
+                  serviceCategory: '美髮',
+                  revenue: 6000,
+                  appointmentCount: 10,
+                  averagePrice: 600,
+                  revenuePercentage: 33.3,
+                ),
+              ],
+            ),
+          ],
+          overallServicePerformances: [
+            ServicePerformance(
+              serviceId: '2',
+              serviceName: '女士剪髮',
+              serviceCategory: '美髮',
+              revenue: 12000,
+              appointmentCount: 15,
+              averagePrice: 800,
+              revenuePercentage: 66.7,
+            ),
+            ServicePerformance(
+              serviceId: '1',
+              serviceName: '男士剪髮',
+              serviceCategory: '美髮',
+              revenue: 6000,
+              appointmentCount: 10,
+              averagePrice: 600,
+              revenuePercentage: 33.3,
+            ),
+          ],
+        );
+    }
+  }
+
+  static List<StaffPerformanceAnalysis> getMockAllStaffPerformanceAnalyses(String businessId, DateTime periodStart, DateTime periodEnd) {
+    final staff = getMockStaff(businessId);
+    return staff.map((s) => getMockStaffPerformanceAnalysis(s.id, periodStart, periodEnd)).toList();
   }
 } 

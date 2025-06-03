@@ -5,9 +5,12 @@ import '../models/business_goal.dart';
 import '../models/branch_performance.dart';
 import '../models/staff_performance.dart';
 import '../models/branch.dart';
+import '../models/staff.dart';
 import '../services/auth_service.dart';
 import '../components/branch_performance_card.dart';
 import '../components/staff_performance_card.dart';
+import '../components/goal_achievement_card.dart';
+import '../components/goal_summary_card.dart';
 
 class DashboardHomeScreen extends StatefulWidget {
   const DashboardHomeScreen({super.key});
@@ -23,6 +26,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   List<StaffPerformance> _staffPerformances = [];
   List<StaffPerformance> _filteredStaffPerformancesData = [];
   List<Branch> _branches = [];
+  List<Staff> _staff = [];
   bool _isLoading = true;
   String? _selectedBranchId; // null 表示"全部"
 
@@ -38,6 +42,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       final branchPerformances = await _apiService.getBranchPerformances('business_001');
       final staffPerformances = await _apiService.getStaffPerformances('business_001');
       final branches = await _apiService.getBranches('business_001');
+      final staff = await _apiService.getStaff('business_001');
       
       // 按營收排序，最高的在前面
       branchPerformances.sort((a, b) => b.monthlyRevenue.compareTo(a.monthlyRevenue));
@@ -49,6 +54,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         _staffPerformances = staffPerformances;
         _filteredStaffPerformancesData = staffPerformances; // 初始狀態顯示所有員工
         _branches = branches;
+        _staff = staff;
         _isLoading = false;
       });
     } catch (e) {
@@ -290,6 +296,53 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                   
                   const SizedBox(height: 32),
                   
+                  // 目標達成概覽
+                  GoalSummaryCard(
+                    goals: _goals,
+                    selectedBranchId: _selectedBranchId,
+                  ),
+                  
+                  const SizedBox(height: 16),
+                  
+                  // 業務目標達成情況
+                  const Text(
+                    '業務目標達成情況',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  
+                  // 企業目標
+                  GoalAchievementCard(
+                    goals: _goals,
+                    level: GoalLevel.business,
+                    branches: _branches,
+                    staff: _staff,
+                    selectedBranchId: _selectedBranchId,
+                  ),
+                  
+                  // 門店目標
+                  GoalAchievementCard(
+                    goals: _goals,
+                    level: GoalLevel.branch,
+                    branches: _branches,
+                    staff: _staff,
+                    selectedBranchId: _selectedBranchId,
+                  ),
+                  
+                  // 員工目標
+                  GoalAchievementCard(
+                    goals: _goals,
+                    level: GoalLevel.staff,
+                    branches: _branches,
+                    staff: _staff,
+                    selectedBranchId: _selectedBranchId,
+                  ),
+                  
+                  const SizedBox(height: 32),
+                  
                   // 門店表現排行榜（僅在顯示全部門店時顯示）
                   if (_selectedBranchId == null) ...[
                     const Text(
@@ -373,19 +426,6 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                   
                   const SizedBox(height: 32),
                   
-                  // 業務目標進度
-                  const Text(
-                    '業務目標進度',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  ..._goals.map((goal) => _buildGoalCard(goal)).toList(),
-                  
-                  const SizedBox(height: 32),
-                  
                   // 快速統計
                   _buildQuickStats(),
                 ],
@@ -416,44 +456,6 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
               value,
               style: const TextStyle(
                 fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildGoalCard(BusinessGoal goal) {
-    final progress = goal.currentValue / goal.targetValue;
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              goal.title,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            LinearProgressIndicator(
-              value: progress,
-              backgroundColor: Colors.grey[200],
-              valueColor: AlwaysStoppedAnimation<Color>(
-                progress >= 1 ? Colors.green : Colors.blue,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              '${goal.currentValue} / ${goal.targetValue} ${goal.unit}',
-              style: TextStyle(
-                color: progress >= 1 ? Colors.green : Colors.blue,
                 fontWeight: FontWeight.bold,
               ),
             ),

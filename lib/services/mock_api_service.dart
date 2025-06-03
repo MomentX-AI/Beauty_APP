@@ -1,16 +1,17 @@
-import '../models/business.dart';
-import '../models/service.dart';
 import '../models/appointment.dart';
-import '../models/customer.dart';
-import '../models/service_history.dart';
-import '../models/business_goal.dart';
-import '../models/business_analysis.dart';
+import '../models/business.dart';
 import '../models/branch.dart';
 import '../models/branch_special_day.dart';
 import '../models/branch_service.dart';
+import '../models/service.dart';
+import '../models/service_history.dart';
+import '../models/customer.dart';
 import '../models/staff.dart';
+import '../models/business_goal.dart';
+import '../models/business_analysis.dart';
 import '../models/branch_performance.dart';
 import '../models/staff_performance.dart';
+import '../models/staff_performance_analysis.dart';
 import 'mock_data_service.dart';
 
 class MockApiService {
@@ -697,7 +698,41 @@ class MockApiService {
     // 再獲取所有員工績效
     final allPerformances = await getStaffPerformances(businessId);
     
-    // 根據員工ID篩選績效
+    // 返回該門店員工的績效
     return allPerformances.where((p) => branchStaffIds.contains(p.staffId)).toList();
+  }
+
+  // 新增：獲取員工詳細績效分析
+  Future<StaffPerformanceAnalysis> getStaffPerformanceAnalysis(String staffId) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    
+    final now = DateTime.now();
+    final periodStart = DateTime(now.year, now.month, 1);
+    final periodEnd = DateTime(now.year, now.month + 1, 0);
+    
+    // 根據員工ID返回模擬的詳細績效分析數據
+    return MockDataService.getMockStaffPerformanceAnalysis(staffId, periodStart, periodEnd);
+  }
+
+  // 新增：獲取所有員工的績效分析列表
+  Future<List<StaffPerformanceAnalysis>> getAllStaffPerformanceAnalyses(String businessId) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    
+    final now = DateTime.now();
+    final periodStart = DateTime(now.year, now.month, 1);
+    final periodEnd = DateTime(now.year, now.month + 1, 0);
+    
+    return MockDataService.getMockAllStaffPerformanceAnalyses(businessId, periodStart, periodEnd);
+  }
+
+  // 新增：獲取員工在特定門店的績效分析
+  Future<StaffPerformanceByBranch> getStaffPerformanceByBranch(String staffId, String branchId) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    
+    final analysis = await getStaffPerformanceAnalysis(staffId);
+    return analysis.branchPerformances.firstWhere(
+      (branch) => branch.branchId == branchId,
+      orElse: () => throw Exception('該員工在此門店沒有績效記錄'),
+    );
   }
 } 

@@ -10,6 +10,7 @@ import 'dashboard_home_screen.dart';
 import 'staff_screen.dart';
 import 'subscription_management_screen.dart';
 import 'billing_management_screen.dart';
+import 'staff_performance_analysis_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   final String businessId;
@@ -22,12 +23,13 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   bool _isSidebarCollapsed = false;
-  final List<Map<String, dynamic>> _menuItems = [
-    {'icon': '儀', 'title': '儀表板', 'isSelected': true},
-    {'icon': '預', 'title': '預約管理', 'isSelected': false},
+  List<Map<String, dynamic>> _menuItems = [
+    {'icon': '店', 'title': '門店績效分析', 'isSelected': true},
+    {'icon': '約', 'title': '預約管理', 'isSelected': false},
     {'icon': '客', 'title': '客戶管理', 'isSelected': false},
-    {'icon': '服', 'title': '門店及服務管理', 'isSelected': false},
+    {'icon': '服', 'title': '服務管理', 'isSelected': false},
     {'icon': '員', 'title': '員工管理', 'isSelected': false},
+    {'icon': '績', 'title': '員工績效分析', 'isSelected': false},
     {'icon': '目', 'title': '業務目標管理', 'isSelected': false},
     {'icon': 'AI', 'title': 'AI 助理', 'isSelected': false},
     {'icon': '方', 'title': '方案管理', 'isSelected': false},
@@ -61,14 +63,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
       case 4:
         return StaffScreen(businessId: widget.businessId);
       case 5:
-        return GoalManagementScreen(businessId: widget.businessId);
+        return const StaffPerformanceAnalysisScreen();
       case 6:
-        return const AIAssistantScreen();
+        return GoalManagementScreen(businessId: widget.businessId);
       case 7:
-        return SubscriptionManagementScreen(businessId: widget.businessId);
+        return const AIAssistantScreen();
       case 8:
-        return BillingManagementScreen(businessId: widget.businessId);
+        return SubscriptionManagementScreen(businessId: widget.businessId);
       case 9:
+        return BillingManagementScreen(businessId: widget.businessId);
+      case 10:
         return const OwnerProfileScreen();
       default:
         return const DashboardHomeScreen();
