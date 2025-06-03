@@ -382,14 +382,14 @@ class _BranchInfoScreenState extends State<BranchInfoScreen> {
                                 ),
                                 if (_selectedBranch!.isDefault) ...[
                                   const SizedBox(height: 8),
-                                  Row(
+                                  const Row(
                                     children: [
                                       Icon(
                                         Icons.star,
                                         color: Colors.blue,
                                       ),
-                                      const SizedBox(width: 8),
-                                      const Text(
+                                      SizedBox(width: 8),
+                                      Text(
                                         '總店',
                                         style: TextStyle(
                                           color: Colors.blue,

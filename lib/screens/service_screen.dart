@@ -23,8 +23,8 @@ class _ServiceScreenState extends State<ServiceScreen> with SingleTickerProvider
   late TabController _tabController;
   ServiceCategory? _selectedCategory; // 改為可為null，null代表顯示全部
   String _searchQuery = '';
-  String _sortBy = '價格';
-  bool _sortAscending = true;
+  final String _sortBy = '價格';
+  final bool _sortAscending = true;
   bool _includeArchived = false;
   List<Service> _services = [];
   bool _isLoading = true;

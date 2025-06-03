@@ -363,41 +363,7 @@ class MockApiService {
   // Business Goal API
   Future<List<BusinessGoal>> getBusinessGoals(String businessId) async {
     await Future.delayed(const Duration(milliseconds: 500));
-    return [
-      BusinessGoal(
-        id: '1',
-        businessId: businessId,
-        title: '本月營收目標',
-        currentValue: 128500,
-        targetValue: 150000,
-        unit: '元',
-        startDate: DateTime(2024, 3, 1),
-        endDate: DateTime(2024, 3, 31),
-        type: GoalType.revenue,
-      ),
-      BusinessGoal(
-        id: '2',
-        businessId: businessId,
-        title: '本月預約目標',
-        currentValue: 156,
-        targetValue: 200,
-        unit: '次',
-        startDate: DateTime(2024, 3, 1),
-        endDate: DateTime(2024, 3, 31),
-        type: GoalType.service_count,
-      ),
-      BusinessGoal(
-        id: '3',
-        businessId: businessId,
-        title: '本月新增客戶目標',
-        currentValue: 28,
-        targetValue: 40,
-        unit: '人',
-        startDate: DateTime(2024, 3, 1),
-        endDate: DateTime(2024, 3, 31),
-        type: GoalType.customer_count,
-      ),
-    ];
+    return MockDataService.getMockBusinessGoals(businessId);
   }
   
   Future<BusinessGoal> createBusinessGoal(BusinessGoal goal) async {
@@ -409,7 +375,7 @@ class MockApiService {
   
   Future<BusinessGoal> getBusinessGoal(String id) async {
     await Future.delayed(const Duration(milliseconds: 500));
-    final goals = await MockDataService.getMockBusinessGoals(null);
+    final goals = MockDataService.getMockBusinessGoals(null);
     return goals.firstWhere((g) => g.id == id);
   }
   
@@ -437,7 +403,7 @@ class MockApiService {
   
   Future<BusinessAnalysis> getBusinessAnalysis(String id) async {
     await Future.delayed(const Duration(milliseconds: 500));
-    final analyses = await MockDataService.getMockBusinessAnalyses(null);
+    final analyses = MockDataService.getMockBusinessAnalyses(null);
     return analyses.firstWhere((a) => a.id == id);
   }
   
@@ -448,20 +414,20 @@ class MockApiService {
   
   Future<BusinessAnalysis> updateBusinessAnalysisStatus(String id, AnalysisStatus status) async {
     await Future.delayed(const Duration(milliseconds: 500));
-    final analyses = await MockDataService.getMockBusinessAnalyses(null);
+    final analyses = MockDataService.getMockBusinessAnalyses(null);
     final analysis = analyses.firstWhere((a) => a.id == id);
     return analysis.copyWith(status: status);
   }
   
   Future<List<BusinessAnalysis>> getBusinessAnalysesByType(String businessId, AnalysisType type) async {
     await Future.delayed(const Duration(milliseconds: 500));
-    final analyses = await MockDataService.getMockBusinessAnalyses(businessId);
+    final analyses = MockDataService.getMockBusinessAnalyses(businessId);
     return analyses.where((a) => a.analysisType == type).toList();
   }
   
   Future<List<BusinessAnalysis>> getBusinessAnalysesByPeriod(String businessId, AnalysisPeriod period) async {
     await Future.delayed(const Duration(milliseconds: 500));
-    final analyses = await MockDataService.getMockBusinessAnalyses(businessId);
+    final analyses = MockDataService.getMockBusinessAnalyses(businessId);
     return analyses.where((a) => a.period == period).toList();
   }
   
@@ -482,7 +448,7 @@ class MockApiService {
 
   Future<Staff> getStaffById(String id) async {
     await Future.delayed(const Duration(milliseconds: 500));
-    final staff = await MockDataService.getMockStaff('1');
+    final staff = MockDataService.getMockStaff('1');
     return staff.firstWhere((s) => s.id == id);
   }
 
@@ -497,13 +463,13 @@ class MockApiService {
 
   Future<List<Staff>> getStaffByBranch(String branchId) async {
     await Future.delayed(const Duration(milliseconds: 500));
-    final allStaff = await MockDataService.getMockStaff('1');
+    final allStaff = MockDataService.getMockStaff('1');
     return allStaff.where((s) => s.branchIds.contains(branchId)).toList();
   }
 
   Future<List<Staff>> getStaffByService(String serviceId) async {
     await Future.delayed(const Duration(milliseconds: 500));
-    final allStaff = await MockDataService.getMockStaff('1');
+    final allStaff = MockDataService.getMockStaff('1');
     return allStaff.where((s) => s.serviceIds.contains(serviceId)).toList();
   }
 

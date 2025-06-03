@@ -4,7 +4,6 @@ import '../models/business.dart';
 import '../models/service.dart';
 import '../models/appointment.dart';
 import '../models/customer.dart';
-import '../models/service_history.dart';
 
 class ApiService {
   static const String baseUrl = 'http://localhost:2345/api';

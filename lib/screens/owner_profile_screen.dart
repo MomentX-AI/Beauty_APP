@@ -158,9 +158,9 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> with SingleTick
             indicatorColor: const Color(0xFF6C5CE7),
             labelColor: Colors.white,
             unselectedLabelColor: Colors.grey.shade700,
-            indicator: BoxDecoration(
-              color: const Color(0xFF6C5CE7),
-              borderRadius: const BorderRadius.only(
+            indicator: const BoxDecoration(
+              color: Color(0xFF6C5CE7),
+              borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(3),
                 topRight: Radius.circular(3),
               ),

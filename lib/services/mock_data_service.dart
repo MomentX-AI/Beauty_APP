@@ -710,7 +710,7 @@ class MockDataService {
   // Mock appointments data
   static Future<List<Appointment>> getMockAppointments() async {
     final customers = await getMockCustomers();
-    final services = await getMockServices();
+    final services = getMockServices();
     final branches = getMockBranches('1');
     final staff = getMockStaff('1');
     
@@ -957,6 +957,7 @@ class MockDataService {
   // Mock business goals data
   static List<BusinessGoal> getMockBusinessGoals(String? businessId) {
     final goals = [
+      // 企業整體目標
       BusinessGoal(
         id: '1',
         businessId: businessId ?? '1',
@@ -967,6 +968,8 @@ class MockDataService {
         startDate: DateTime(2024, 3, 1),
         endDate: DateTime(2024, 3, 31),
         type: GoalType.revenue,
+        level: GoalLevel.business,
+        description: '達成全公司的月度營收目標',
       ),
       BusinessGoal(
         id: '2',
@@ -978,6 +981,8 @@ class MockDataService {
         startDate: DateTime(2024, 3, 1),
         endDate: DateTime(2024, 3, 31),
         type: GoalType.service_count,
+        level: GoalLevel.business,
+        description: '提升整體服務量，增加客戶滿意度',
       ),
       BusinessGoal(
         id: '3',
@@ -989,6 +994,96 @@ class MockDataService {
         startDate: DateTime(2024, 3, 1),
         endDate: DateTime(2024, 3, 31),
         type: GoalType.customer_count,
+        level: GoalLevel.business,
+        description: '拓展新客戶群，提升品牌知名度',
+      ),
+      
+      // 門店目標
+      BusinessGoal(
+        id: '4',
+        businessId: businessId ?? '1',
+        title: '總店營收目標',
+        currentValue: 42000,
+        targetValue: 50000,
+        unit: '元',
+        startDate: DateTime(2024, 3, 1),
+        endDate: DateTime(2024, 3, 31),
+        type: GoalType.revenue,
+        level: GoalLevel.branch,
+        branchId: '1',
+        description: '總店本月營收目標',
+      ),
+      BusinessGoal(
+        id: '5',
+        businessId: businessId ?? '1',
+        title: '信義門店營收目標',
+        currentValue: 35000,
+        targetValue: 40000,
+        unit: '元',
+        startDate: DateTime(2024, 3, 1),
+        endDate: DateTime(2024, 3, 31),
+        type: GoalType.revenue,
+        level: GoalLevel.branch,
+        branchId: '2',
+        description: '信義門店本月營收目標',
+      ),
+      BusinessGoal(
+        id: '6',
+        businessId: businessId ?? '1',
+        title: '西門門店客戶回訪率',
+        currentValue: 68,
+        targetValue: 75,
+        unit: '%',
+        startDate: DateTime(2024, 3, 1),
+        endDate: DateTime(2024, 3, 31),
+        type: GoalType.revisit_rate,
+        level: GoalLevel.branch,
+        branchId: '3',
+        description: '提升西門門店客戶回訪率',
+      ),
+      
+      // 員工目標
+      BusinessGoal(
+        id: '7',
+        businessId: businessId ?? '1',
+        title: '陳美麗個人營收目標',
+        currentValue: 15000,
+        targetValue: 20000,
+        unit: '元',
+        startDate: DateTime(2024, 3, 1),
+        endDate: DateTime(2024, 3, 31),
+        type: GoalType.revenue,
+        level: GoalLevel.staff,
+        staffId: '1',
+        description: '陳美麗本月個人營收目標',
+      ),
+      BusinessGoal(
+        id: '8',
+        businessId: businessId ?? '1',
+        title: '王小明服務數量目標',
+        currentValue: 45,
+        targetValue: 60,
+        unit: '次',
+        startDate: DateTime(2024, 3, 1),
+        endDate: DateTime(2024, 3, 31),
+        type: GoalType.service_count,
+        level: GoalLevel.staff,
+        staffId: '2',
+        description: '王小明本月服務數量目標',
+      ),
+      BusinessGoal(
+        id: '9',
+        businessId: businessId ?? '1',
+        title: '李大華客戶滿意度',
+        currentValue: 88,
+        targetValue: 95,
+        unit: '%',
+        startDate: DateTime(2024, 3, 1),
+        endDate: DateTime(2024, 3, 31),
+        type: GoalType.custom,
+        level: GoalLevel.staff,
+        staffId: '3',
+        description: '李大華客戶滿意度評分目標',
       ),
     ];
 
@@ -1305,7 +1400,7 @@ class MockDataService {
             case StaffRole.owner:
               // 店主：每天全日班
               schedule = StaffSchedule(
-                id: '${weekOffset}_${dayOffset}_${staffIndex}',
+                id: '${weekOffset}_${dayOffset}_$staffIndex',
                 staffId: currentStaff.id,
                 branchId: currentStaff.branchIds.isNotEmpty ? currentStaff.branchIds[0] : '1',
                 date: date,
@@ -1324,7 +1419,7 @@ class MockDataService {
               // 經理：平日全日班，週末早班
               if (date.weekday <= 5) {
                 schedule = StaffSchedule(
-                  id: '${weekOffset}_${dayOffset}_${staffIndex}',
+                  id: '${weekOffset}_${dayOffset}_$staffIndex',
                   staffId: currentStaff.id,
                   branchId: currentStaff.branchIds.isNotEmpty ? currentStaff.branchIds[0] : '1',
                   date: date,
@@ -1339,7 +1434,7 @@ class MockDataService {
                 );
               } else if (date.weekday == 6) {
                 schedule = StaffSchedule(
-                  id: '${weekOffset}_${dayOffset}_${staffIndex}',
+                  id: '${weekOffset}_${dayOffset}_$staffIndex',
                   staffId: currentStaff.id,
                   branchId: currentStaff.branchIds.isNotEmpty ? currentStaff.branchIds[0] : '1',
                   date: date,
@@ -1392,7 +1487,7 @@ class MockDataService {
               }
               
               schedule = StaffSchedule(
-                id: '${weekOffset}_${dayOffset}_${staffIndex}',
+                id: '${weekOffset}_${dayOffset}_$staffIndex',
                 staffId: currentStaff.id,
                 branchId: currentStaff.branchIds.isNotEmpty ? currentStaff.branchIds[dayOffset % currentStaff.branchIds.length] : '1',
                 date: date,
@@ -1412,7 +1507,7 @@ class MockDataService {
               if (date.weekday <= 5) {
                 final isAfternoon = (dayOffset + staffIndex) % 2 == 0;
                 schedule = StaffSchedule(
-                  id: '${weekOffset}_${dayOffset}_${staffIndex}',
+                  id: '${weekOffset}_${dayOffset}_$staffIndex',
                   staffId: currentStaff.id,
                   branchId: currentStaff.branchIds.isNotEmpty ? currentStaff.branchIds[dayOffset % currentStaff.branchIds.length] : '1',
                   date: date,
@@ -1427,7 +1522,7 @@ class MockDataService {
                 );
               } else if (date.weekday == 6) {
                 schedule = StaffSchedule(
-                  id: '${weekOffset}_${dayOffset}_${staffIndex}',
+                  id: '${weekOffset}_${dayOffset}_$staffIndex',
                   staffId: currentStaff.id,
                   branchId: currentStaff.branchIds.isNotEmpty ? currentStaff.branchIds[0] : '1',
                   date: date,
@@ -1448,7 +1543,7 @@ class MockDataService {
               if (date.weekday <= 6) {
                 final isMorning = (dayOffset + staffIndex) % 2 == 0;
                 schedule = StaffSchedule(
-                  id: '${weekOffset}_${dayOffset}_${staffIndex}',
+                  id: '${weekOffset}_${dayOffset}_$staffIndex',
                   staffId: currentStaff.id,
                   branchId: currentStaff.branchIds.isNotEmpty ? currentStaff.branchIds[0] : '1',
                   date: date,
@@ -1468,7 +1563,7 @@ class MockDataService {
               // 接待員：全日班
               if (date.weekday <= 6) {
                 schedule = StaffSchedule(
-                  id: '${weekOffset}_${dayOffset}_${staffIndex}',
+                  id: '${weekOffset}_${dayOffset}_$staffIndex',
                   staffId: currentStaff.id,
                   branchId: currentStaff.branchIds.isNotEmpty ? currentStaff.branchIds[dayOffset % currentStaff.branchIds.length] : '1',
                   date: date,

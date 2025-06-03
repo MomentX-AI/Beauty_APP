@@ -3,7 +3,6 @@ import 'service.dart';
 import 'branch.dart';
 import 'staff.dart';
 import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
 
 enum AppointmentStatus {
   booked,

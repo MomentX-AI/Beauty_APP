@@ -187,17 +187,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: Colors.blue.shade200),
                       ),
-                      child: Column(
+                      child: const Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             '測試帳號：',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.blue,
                             ),
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: 8),
                           Text('管理員：admin@beauty.com / 123456'),
                           Text('員工：staff@beauty.com / 123456'),
                         ],

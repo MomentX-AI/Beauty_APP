@@ -195,7 +195,7 @@ class StaffPerformanceCard extends StatelessWidget {
                   Expanded(
                     child: _buildMetricItem(
                       '滿意度',
-                      '${performance.customerSatisfactionScore.toStringAsFixed(1)}',
+                      performance.customerSatisfactionScore.toStringAsFixed(1),
                       Icons.star,
                       Colors.amber,
                     ),

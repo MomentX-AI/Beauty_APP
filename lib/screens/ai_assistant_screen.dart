@@ -345,10 +345,10 @@ class _AIAssistantScreenState extends State<AIAssistantScreen> {
             children: [
               // 頭像
               if (!message.isUser) ...[
-                CircleAvatar(
+                const CircleAvatar(
                   radius: 20,
-                  backgroundColor: const Color(0xFF6C5CE7),
-                  child: const Text(
+                  backgroundColor: Color(0xFF6C5CE7),
+                  child: Text(
                     'AI',
                     style: TextStyle(
                       color: Colors.white,

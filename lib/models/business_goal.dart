@@ -7,6 +7,38 @@ enum GoalType {
   custom,
 }
 
+enum GoalLevel {
+  business,
+  branch,
+  staff,
+}
+
+extension GoalLevelExtension on GoalLevel {
+  String get displayName {
+    switch (this) {
+      case GoalLevel.business:
+        return '企業目標';
+      case GoalLevel.branch:
+        return '門店目標';
+      case GoalLevel.staff:
+        return '員工目標';
+    }
+  }
+
+  String toJson() {
+    return toString().split('.').last;
+  }
+}
+
+extension GoalLevelFromString on GoalLevel {
+  static GoalLevel fromString(String value) {
+    return GoalLevel.values.firstWhere(
+      (level) => level.toString().split('.').last == value,
+      orElse: () => GoalLevel.business,
+    );
+  }
+}
+
 extension GoalTypeExtension on GoalType {
   String get displayName {
     switch (this) {
@@ -49,6 +81,10 @@ class BusinessGoal {
   final DateTime startDate;
   final DateTime endDate;
   final GoalType type;
+  final GoalLevel level;
+  final String? branchId;  // 門店目標時使用
+  final String? staffId;   // 員工目標時使用
+  final String? description;
 
   BusinessGoal({
     required this.id,
@@ -60,6 +96,10 @@ class BusinessGoal {
     required this.startDate,
     required this.endDate,
     this.type = GoalType.custom,
+    this.level = GoalLevel.business,
+    this.branchId,
+    this.staffId,
+    this.description,
   });
 
   factory BusinessGoal.fromJson(Map<String, dynamic> json) {
@@ -73,6 +113,10 @@ class BusinessGoal {
       startDate: DateTime.parse(json['startDate'] as String),
       endDate: DateTime.parse(json['endDate'] as String),
       type: GoalTypeFromString.fromString(json['type'] as String? ?? 'custom'),
+      level: GoalLevelFromString.fromString(json['level'] as String? ?? 'business'),
+      branchId: json['branchId'] as String?,
+      staffId: json['staffId'] as String?,
+      description: json['description'] as String?,
     );
   }
 
@@ -87,6 +131,10 @@ class BusinessGoal {
       'startDate': startDate.toIso8601String(),
       'endDate': endDate.toIso8601String(),
       'type': type.toJson(),
+      'level': level.toJson(),
+      if (branchId != null) 'branchId': branchId,
+      if (staffId != null) 'staffId': staffId,
+      if (description != null) 'description': description,
     };
   }
 
@@ -100,6 +148,10 @@ class BusinessGoal {
     DateTime? startDate,
     DateTime? endDate,
     GoalType? type,
+    GoalLevel? level,
+    String? branchId,
+    String? staffId,
+    String? description,
   }) {
     return BusinessGoal(
       id: id ?? this.id,
@@ -111,6 +163,10 @@ class BusinessGoal {
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
       type: type ?? this.type,
+      level: level ?? this.level,
+      branchId: branchId ?? this.branchId,
+      staffId: staffId ?? this.staffId,
+      description: description ?? this.description,
     );
   }
 

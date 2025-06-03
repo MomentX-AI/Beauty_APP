@@ -275,13 +275,13 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       ),
                       _buildKPICard(
                         '本月預約',
-                        '${_getTotalAppointments()}',
+                        _getTotalAppointments(),
                         Icons.calendar_today,
                         Colors.blue,
                       ),
                       _buildKPICard(
                         _selectedBranchId == null ? '活躍門店' : '員工數',
-                        _selectedBranchId == null ? '${_getActiveBranches()}' : '${_filteredBranchPerformances.isNotEmpty ? _filteredBranchPerformances.first.staffCount : 0}',
+                        _selectedBranchId == null ? _getActiveBranches() : '${_filteredBranchPerformances.isNotEmpty ? _filteredBranchPerformances.first.staffCount : 0}',
                         _selectedBranchId == null ? Icons.store : Icons.person,
                         Colors.purple,
                       ),
@@ -331,7 +331,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                     ),
                     const SizedBox(height: 16),
                     if (_filteredBranchPerformances.isNotEmpty)
-                      Container(
+                      SizedBox(
                         width: double.infinity,
                         child: BranchPerformanceCard(
                           performance: _filteredBranchPerformances.first,

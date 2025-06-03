@@ -51,7 +51,7 @@ class _AppointmentFormDialogState extends State<AppointmentFormDialog> {
     try {
       // Load customers, services, branches, and staff
       final customers = await MockDataService.getMockCustomers();
-      final services = await MockDataService.getMockServices();
+      final services = MockDataService.getMockServices();
       final branches = MockDataService.getMockBranches(widget.businessId);
       final staff = MockDataService.getMockStaff(widget.businessId);
       

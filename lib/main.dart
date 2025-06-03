@@ -29,9 +29,9 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
-        '/dashboard': (context) => DashboardScreen(businessId: defaultBusinessId),
-        '/subscription': (context) => SubscriptionManagementScreen(businessId: defaultBusinessId),
-        '/billing': (context) => BillingManagementScreen(businessId: defaultBusinessId),
+        '/dashboard': (context) => const DashboardScreen(businessId: defaultBusinessId),
+        '/subscription': (context) => const SubscriptionManagementScreen(businessId: defaultBusinessId),
+        '/billing': (context) => const BillingManagementScreen(businessId: defaultBusinessId),
       },
     );
   }

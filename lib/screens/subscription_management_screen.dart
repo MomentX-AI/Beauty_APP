@@ -169,7 +169,7 @@ class _SubscriptionManagementScreenState extends State<SubscriptionManagementScr
                 Expanded(
                   child: _buildInfoItem(
                     '月費金額',
-                    currentSubscription!.monthlyAmount.toInt().toString() + ' 元',
+                    '${currentSubscription!.monthlyAmount.toInt()} 元',
                     Icons.attach_money,
                   ),
                 ),
@@ -526,7 +526,7 @@ class _SubscriptionManagementScreenState extends State<SubscriptionManagementScr
     // 這裡應該調用 API 來更新訂閱
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('已${actionType} ${plan.name}，請前往帳單頁面完成付款'),
+        content: Text('已$actionType ${plan.name}，請前往帳單頁面完成付款'),
         backgroundColor: const Color(0xFF4CAF50),
       ),
     );

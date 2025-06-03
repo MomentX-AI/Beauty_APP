@@ -48,7 +48,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
     },
   ];
 
-  List<Map<String, dynamic>> _goals = [
+  final List<Map<String, dynamic>> _goals = [
     {
       'id': '1',
       'title': '營收目標',
@@ -181,8 +181,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showGoalFormDialog(),
         backgroundColor: const Color(0xFF6C5CE7),
-        child: const Icon(Icons.add),
         tooltip: '新增經營目標',
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -333,20 +333,20 @@ class _ReportsScreenState extends State<ReportsScreen> {
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Colors.grey.shade300),
       ),
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             '營收趨勢',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           SizedBox(
             height: 200,
-            child: const RevenueLineChart(),
+            child: RevenueLineChart(),
           ),
         ],
       ),

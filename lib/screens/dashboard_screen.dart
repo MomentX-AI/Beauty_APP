@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import 'owner_profile_screen.dart';
-import 'reports_screen.dart';
+import 'goal_management_screen.dart';
 import 'customer_screen.dart';
 import 'service_screen.dart';
 import 'appointment_screen.dart';
@@ -28,7 +28,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     {'icon': '客', 'title': '客戶管理', 'isSelected': false},
     {'icon': '服', 'title': '門店及服務管理', 'isSelected': false},
     {'icon': '員', 'title': '員工管理', 'isSelected': false},
-    {'icon': '報', 'title': '業務分析報告', 'isSelected': false},
+    {'icon': '目', 'title': '業務目標管理', 'isSelected': false},
     {'icon': 'AI', 'title': 'AI 助理', 'isSelected': false},
     {'icon': '方', 'title': '方案管理', 'isSelected': false},
     {'icon': '帳', 'title': '帳單管理', 'isSelected': false},
@@ -61,7 +61,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       case 4:
         return StaffScreen(businessId: widget.businessId);
       case 5:
-        return const ReportsScreen();
+        return GoalManagementScreen(businessId: widget.businessId);
       case 6:
         return const AIAssistantScreen();
       case 7:
@@ -97,10 +97,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         : MainAxisAlignment.spaceBetween,
                     children: [
                       if (!_isSidebarCollapsed)
-                        Expanded(
+                        const Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 16.0),
-                            child: const Text(
+                            padding: EdgeInsets.only(left: 16.0),
+                            child: Text(
                               '美業管理系統',
                               style: TextStyle(
                                 color: Colors.white,
