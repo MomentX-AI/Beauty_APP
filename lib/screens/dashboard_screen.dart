@@ -24,17 +24,17 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   bool _isSidebarCollapsed = false;
   List<Map<String, dynamic>> _menuItems = [
-    {'icon': '店', 'title': '門店績效分析', 'isSelected': true},
-    {'icon': '約', 'title': '預約管理', 'isSelected': false},
-    {'icon': '客', 'title': '客戶管理', 'isSelected': false},
-    {'icon': '服', 'title': '服務管理', 'isSelected': false},
-    {'icon': '員', 'title': '員工管理', 'isSelected': false},
-    {'icon': '績', 'title': '員工績效分析', 'isSelected': false},
-    {'icon': '目', 'title': '業務目標管理', 'isSelected': false},
-    {'icon': 'AI', 'title': 'AI 助理', 'isSelected': false},
-    {'icon': '方', 'title': '方案管理', 'isSelected': false},
-    {'icon': '帳', 'title': '帳單管理', 'isSelected': false},
-    {'icon': '用', 'title': '用戶管理', 'isSelected': false},
+    {'icon': Icons.chat, 'title': 'AI 助理', 'isSelected': false},
+    {'icon': Icons.dashboard, 'title': '門店績效分析', 'isSelected': true},
+    {'icon': Icons.leaderboard, 'title': '員工績效分析', 'isSelected': false},
+    {'icon': Icons.flag, 'title': '業務目標管理', 'isSelected': false},
+    {'icon': Icons.calendar_today, 'title': '預約管理', 'isSelected': false},
+    {'icon': Icons.people, 'title': '客戶管理', 'isSelected': false},
+    {'icon': Icons.room_service, 'title': '服務管理', 'isSelected': false},
+    {'icon': Icons.person, 'title': '員工管理', 'isSelected': false},
+    {'icon': Icons.card_membership, 'title': '方案管理', 'isSelected': false},
+    {'icon': Icons.receipt, 'title': '帳單管理', 'isSelected': false},
+    {'icon': Icons.account_circle, 'title': '帳號管理', 'isSelected': false},
   ];
 
   void _selectMenuItem(int index) {
@@ -53,21 +53,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
     
     switch (selectedIndex) {
       case 0:
-        return const DashboardHomeScreen();
-      case 1:
-        return AppointmentScreen(businessId: widget.businessId);
-      case 2:
-        return const CustomerScreen();
-      case 3:
-        return ServiceScreen(businessId: widget.businessId);
-      case 4:
-        return StaffScreen(businessId: widget.businessId);
-      case 5:
-        return const StaffPerformanceAnalysisScreen();
-      case 6:
-        return GoalManagementScreen(businessId: widget.businessId);
-      case 7:
         return const AIAssistantScreen();
+      case 1:
+        return const DashboardHomeScreen();
+      case 2:
+        return const StaffPerformanceAnalysisScreen();
+      case 3:
+        return GoalManagementScreen(businessId: widget.businessId);
+      case 4:
+        return AppointmentScreen(businessId: widget.businessId);
+      case 5:
+        return const CustomerScreen();
+      case 6:
+        return ServiceScreen(businessId: widget.businessId);
+      case 7:
+        return StaffScreen(businessId: widget.businessId);
       case 8:
         return SubscriptionManagementScreen(businessId: widget.businessId);
       case 9:
@@ -169,19 +169,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     itemBuilder: (context, index) {
                       final item = _menuItems[index];
                       return ListTile(
-                        leading: CircleAvatar(
-                          radius: 12,
-                          backgroundColor: item['isSelected']
-                              ? Colors.white
-                              : const Color(0xFF6C5CE7).withOpacity(0.3),
-                          child: Text(
+                        leading: Container(
+                          width: 24,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: item['isSelected']
+                                ? Colors.white.withOpacity(0.2)
+                                : Colors.transparent,
+                          ),
+                          child: Icon(
                             item['icon'],
-                            style: TextStyle(
-                              color: item['isSelected']
-                                  ? const Color(0xFF6C5CE7)
-                                  : Colors.white,
-                              fontSize: 12,
-                            ),
+                            color: item['isSelected']
+                                ? Colors.white
+                                : Colors.grey.shade400,
+                            size: 20,
                           ),
                         ),
                         title: !_isSidebarCollapsed
@@ -214,7 +216,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Version 1.0.0',
+                          'Version 1.0.1',
                           style: TextStyle(
                             color: Colors.grey.shade400,
                             fontSize: 12,
