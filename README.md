@@ -1,6 +1,69 @@
-# BeautyAIGO 美容管理系統
+# BeautyAIGO 美容管理系統 (Monorepo)
 
-美容管理系統是一款專為美容沙龍和美容業者設計的Flutter應用，提供完整的美容業務管理解決方案。
+美容管理系統是一款專為美容沙龍和美容業者設計的全棧應用，包含 Flutter 前端應用和 Node.js 後端 API，提供完整的美容業務管理解決方案。
+
+## 專案架構
+
+本專案採用 Monorepo 架構，包含以下模組：
+
+- **frontend/**: Flutter 跨平台應用（iOS、Android、Web、Desktop）
+- **backend/**: Node.js + Express.js API 服務
+- **shared/**: 共享的類型定義和配置
+- **docs/**: 專案文檔和 API 規格
+
+## 快速開始
+
+### 環境需求
+
+#### 前端 (Flutter)
+- Flutter SDK >= 3.0.0
+- Dart SDK >= 3.0.0
+
+#### 後端 (Node.js)
+- Node.js >= 18.0.0
+- npm >= 9.0.0 或 yarn >= 3.0.0
+- PostgreSQL >= 14.0 或 MongoDB >= 6.0
+
+### 安裝和運行
+
+1. **克隆專案**
+   ```bash
+   git clone https://github.com/yourusername/BeautyAI_Monorepo.git
+   cd BeautyAI_Monorepo
+   ```
+
+2. **安裝所有依賴**
+   ```bash
+   # 安裝後端依賴
+   cd backend
+   npm install
+   
+   # 安裝前端依賴
+   cd ../frontend
+   flutter pub get
+   ```
+
+3. **配置環境變數**
+   ```bash
+   # 複製環境變數範本
+   cp backend/.env.example backend/.env
+   # 編輯 backend/.env 設定資料庫連線等配置
+   ```
+
+4. **啟動開發環境**
+   ```bash
+   # 啟動後端 API (在 backend/ 目錄)
+   npm run dev
+   
+   # 啟動前端應用 (在 frontend/ 目錄)
+   flutter run
+   ```
+
+### 開發模式
+
+- **後端 API**: `http://localhost:3000`
+- **前端應用**: `http://localhost:3001` (Web) 或原生應用
+- **API 文檔**: `http://localhost:3000/api-docs`
 
 ## 功能概述
 
@@ -258,17 +321,49 @@
 - **帳單統計**：提供已付款、待付款、逾期等統計資訊
 - **付款提醒**：到期前提供付款提醒
 
-## 專案結構
+## 專案結構 (Monorepo)
 
 ```
-lib/
-  ├── components/    # 通用UI組件（包含目標展示組件）
-  ├── models/        # 數據模型（包含BusinessGoal模型）
-  ├── screens/       # 應用界面（包含儀表板和目標管理）
-  ├── services/      # API和業務邏輯服務
-  ├── widgets/       # 可重用UI小部件
-  ├── routes/        # 路由配置
-  └── main.dart      # 應用入口點
+BeautyAI_Monorepo/
+├── frontend/                 # Flutter 前端應用
+│   ├── lib/
+│   │   ├── components/       # 通用UI組件
+│   │   ├── models/          # 數據模型
+│   │   ├── screens/         # 應用界面
+│   │   ├── services/        # API和業務邏輯服務
+│   │   ├── widgets/         # 可重用UI小部件
+│   │   ├── routes/          # 路由配置
+│   │   └── main.dart        # 應用入口點
+│   ├── pubspec.yaml
+│   ├── android/
+│   ├── ios/
+│   ├── web/
+│   └── ...
+├── backend/                  # Node.js 後端 API
+│   ├── src/
+│   │   ├── controllers/     # API 控制器
+│   │   ├── models/          # 數據模型 (Mongoose/Sequelize)
+│   │   ├── routes/          # API 路由
+│   │   ├── services/        # 業務邏輯服務
+│   │   ├── middleware/      # 中間件
+│   │   ├── utils/           # 工具函數
+│   │   └── app.js          # Express 應用
+│   ├── package.json
+│   ├── .env.example
+│   └── ...
+├── shared/                   # 共享類型定義和工具
+│   ├── types/               # TypeScript 類型定義
+│   ├── constants/           # 常數定義
+│   └── utils/               # 共用工具函數
+├── docs/                     # 專案文檔
+│   ├── api/                 # API 文檔
+│   ├── database/            # 資料庫設計文檔
+│   └── deployment/          # 部署指南
+├── scripts/                  # 建置和部署腳本
+├── docker-compose.yml        # Docker 容器配置
+├── .gitignore
+├── README.md
+└── package.json             # 根目錄 workspace 配置
 ```
 
 ## 依賴項

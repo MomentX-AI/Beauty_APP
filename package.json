@@ -1,0 +1,53 @@
+{
+  "name": "beautyai-monorepo",
+  "version": "1.0.0",
+  "description": "BeautyAI Beauty Management System - Full Stack Application",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend",
+    "shared"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && go run cmd/server/main.go",
+    "dev:frontend": "cd frontend && flutter run -d web-server --web-port 3001",
+    "build": "npm run build:backend && npm run build:frontend",
+    "build:backend": "cd backend && go build -o bin/server cmd/server/main.go",
+    "build:frontend": "cd frontend && flutter build web",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "cd backend && go test ./...",
+    "test:frontend": "cd frontend && flutter test",
+    "lint": "npm run lint:backend",
+    "lint:backend": "cd backend && go vet ./... && go fmt ./...",
+    "install:all": "npm install && cd backend && go mod download && cd ../frontend && flutter pub get",
+    "clean": "npm run clean:backend && npm run clean:frontend",
+    "clean:backend": "cd backend && go clean && rm -rf bin/",
+    "clean:frontend": "cd frontend && flutter clean",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:build": "docker-compose build",
+    "swagger": "cd backend && swag init -g cmd/server/main.go -o ./docs"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/BeautyAI_Monorepo.git"
+  },
+  "keywords": [
+    "beauty",
+    "salon",
+    "management",
+    "flutter",
+    "nodejs",
+    "monorepo"
+  ],
+  "author": "BeautyAI Team",
+  "license": "MIT"
+} 
