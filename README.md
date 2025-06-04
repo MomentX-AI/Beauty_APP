@@ -1,438 +1,288 @@
-# BeautyAIGO 美容管理系統 (Monorepo)
+# BeautyAI 美容管理系統 (Full-Stack Application)
 
-美容管理系統是一款專為美容沙龍和美容業者設計的全棧應用，包含 Flutter 前端應用和 Node.js 後端 API，提供完整的美容業務管理解決方案。
+BeautyAI 是一款專為美容沙龍和美容業者設計的全棧應用，提供完整的美容業務管理解決方案。本專案採用現代化的技術架構，包含 Flutter 跨平台前端應用和 Go 語言後端 API 服務。
 
 ## 專案架構
 
-本專案採用 Monorepo 架構，包含以下模組：
-
-- **frontend/**: Flutter 跨平台應用（iOS、Android、Web、Desktop）
-- **backend/**: Node.js + Express.js API 服務
-- **shared/**: 共享的類型定義和配置
-- **docs/**: 專案文檔和 API 規格
-
-## 快速開始
-
-### 環境需求
-
-#### 前端 (Flutter)
-- Flutter SDK >= 3.0.0
-- Dart SDK >= 3.0.0
-
-#### 後端 (Node.js)
-- Node.js >= 18.0.0
-- npm >= 9.0.0 或 yarn >= 3.0.0
-- PostgreSQL >= 14.0 或 MongoDB >= 6.0
-
-### 安裝和運行
-
-1. **克隆專案**
-   ```bash
-   git clone https://github.com/yourusername/BeautyAI_Monorepo.git
-   cd BeautyAI_Monorepo
-   ```
-
-2. **安裝所有依賴**
-   ```bash
-   # 安裝後端依賴
-   cd backend
-   npm install
-   
-   # 安裝前端依賴
-   cd ../frontend
-   flutter pub get
-   ```
-
-3. **配置環境變數**
-   ```bash
-   # 複製環境變數範本
-   cp backend/.env.example backend/.env
-   # 編輯 backend/.env 設定資料庫連線等配置
-   ```
-
-4. **啟動開發環境**
-   ```bash
-   # 啟動後端 API (在 backend/ 目錄)
-   npm run dev
-   
-   # 啟動前端應用 (在 frontend/ 目錄)
-   flutter run
-   ```
-
-### 開發模式
-
-- **後端 API**: `http://localhost:3000`
-- **前端應用**: `http://localhost:3001` (Web) 或原生應用
-- **API 文檔**: `http://localhost:3000/api-docs`
-
-## 功能概述
-
-- **門店績效分析**：門店營運數據概覽和重要指標分析
-- **預約管理**：客戶預約排程和管理
-- **客戶管理**：客戶資料和服務歷史記錄
-- **服務管理**：美容服務項目管理和定價
-- **員工管理**：員工資料、排班和績效管理
-- **員工績效分析**：深度分析員工在各門店的績效和服務收益
-- **業務目標管理**：門店和員工業務目標設定與追蹤
-- **AI 助理**：智能業務推薦和決策支持
-- **方案管理**：訂閱方案選擇和升級管理
-- **帳單管理**：費用帳單查看和付款處理
-- **用戶管理**：用戶註冊、登入和權限管理
-
-## 訂閱方案
-
-### Basic 基礎版 (NT$ 300/員工/月)
-- 適合單一門店的美容業者
-- 單一門店管理
-- 基礎預約管理
-- 客戶資料管理
-- 員工管理
-- 基礎報表分析
-- AI 助理
-- 基礎技術支援
-
-### Business 商業版 (NT$ 450/員工/月)
-- 適合多門店連鎖美容業者
-- 多門店管理（無限制）
-- 進階預約管理
-- 客戶資料管理
-- 員工管理與排班
-- 進階報表分析
-- AI 助理
-- 多門店庫存管理
-- 進階權限控制
-- 優先技術支援
-- 自訂報表
-
-## 功能實作進度
-
-| 功能模塊 | 狀態 | 實作程度 |
-|---------|------|---------|
-| 登入/註冊 | ✅ 完成 | 具備基本的表單驗證，使用模擬數據服務 |
-| 門店績效分析 | ✅ 完成 | 完整的門店營運數據分析，包含側邊欄導航及所有功能模塊入口，支持折疊展開 |
-| 門店篩選功能 | ✅ 完成 | 門店績效分析頁面支持門店選擇，可查看單一門店或全部門店的營運數據 |
-| 業務目標展示 | ✅ 完成 | 門店績效分析頁面整合業務目標達成率展示，支持企業、門店、員工三層級目標追蹤 |
-| AI 助理 | ✅ 完成 | 實現基本對話功能，支持預約查詢、客戶信息查詢和快速回复 |
-| 預約管理 | ✅ 完成 | 預約列表展示、新增預約表單、員工指定機制、排班衝突檢查 |
-| 服務管理 | ✅ 完成 | 服務項目列表、新增/編輯服務、服務分類管理 |
-| 門店服務管理 | ✅ 完成 | 可選擇門店並為每個門店設定服務項目，支持自訂價格 |
-| 員工管理 | ✅ 完成 | 員工列表、新增/編輯員工、多門店分配、服務能力管理、排班管理 |
-| 員工績效分析 | ✅ 完成 | 員工跨門店績效追蹤、服務收益分析、可視化圖表展示 |
-| 客戶管理 | ✅ 完成 | 客戶列表、詳細信息查看、服務歷史記錄 |
-| 業務目標管理 | ✅ 完成 | 門店業務目標設定、員工個人目標設定、目標達成追蹤 |
-| 主理人資料 | ✅ 完成 | 商家資料編輯、營業目標設定、門店管理 |
-| 方案管理 | ✅ 完成 | 訂閱方案選擇、升級功能、方案比較、門店限制管理 |
-| 帳單管理 | ✅ 完成 | 帳單列表、付款處理、帳單詳情、統計報表 |
-
-## 最新更新
-
-### 2024-12-19
-- **新增員工績效分析功能**：提供深度的員工績效分析和收益追蹤
-  - **跨門店績效追蹤**：分析員工在不同門店的工作表現和收益分布
-  - **服務收益分析**：詳細展示員工主要收益來源的服務項目和收益占比
-  - **可視化圖表展示**：使用圓餅圖和柱狀圖直觀展示收益分布和服務績效
-  - **智能排行榜**：自動排序顯示績效最佳的員工，支持快速識別明星員工
-  - **詳細績效報表**：提供預約數、客戶數、平均單價等多維度績效指標
-- **雙屏設計界面**：左側員工列表，右側詳細分析，提供流暢的用戶體驗
-- **門店收益分析**：分析員工收益主要來自哪個門店，幫助優化人員配置
-- **服務項目分析**：識別員工最擅長的服務項目，支持專業化發展規劃
-
-### 2024-12-19 (業務目標功能)
-- **新增業務目標展示功能**：門店績效分析頁面現在顯示完整的業務目標達成情況
-  - **目標概覽卡片**：在門店績效分析頁面頂部展示企業、門店、員工三層級目標的整體達成率
-  - **詳細目標追蹤**：提供每個層級目標的詳細進度展示，包含進度條、達成百分比和目標分類
-  - **門店篩選支持**：目標展示會根據選擇的門店動態篩選相關目標
-  - **智能分組展示**：門店目標按門店分組，員工目標按員工分組，提供清晰的組織結構
-  - **達成率顏色編碼**：使用顏色編碼（綠色≥90%、橙色≥70%、紅色<70%）直觀展示目標完成狀況
-- **優化門店績效分析佈局**：重新組織頁面結構，突出目標管理的重要性
-- **增強用戶體驗**：提供更直觀的目標進度可視化，幫助管理者快速掌握業務狀況
-
-### 2024-12-19 (之前更新)
-- **新增門店篩選功能**：在門店績效分析頁面新增門店選擇器，支持查看全部門店或單一門店的營運數據
-- **動態數據顯示**：根據選擇的門店動態調整KPI指標、員工績效排行榜和業務亮點
-- **門店排行榜**：全部門店模式下顯示門店表現排行榜，包含營收、預約率等關鍵指標
-- **員工績效篩選**：支持按門店篩選員工績效數據，提供更精確的分析
-- **UI/UX優化**：修復卡片組件溢出問題，優化佈局響應性和視覺效果
-- **數據一致性修復**：統一模擬數據服務間的ID格式，確保數據關聯正確性
-
-### 2024-03-21
-- 新增方案管理功能，支持 Basic 和 Business 兩種訂閱方案
-- 新增帳單管理功能，包含付款處理和帳單統計
-- 實現基於員工數量的動態計費系統
-- 添加訂閱狀態監控和到期提醒
-- 儀表板新增訂閱狀態卡片顯示
-- 支持多種付款方式（信用卡、銀行轉帳、現金等）
-- 新增員工排班管理功能
-- 優化預約系統，增加排班衝突檢查
-- 改進服務分類管理
-- 新增員工績效分析報表
-- 優化UI/UX設計，提升用戶體驗
-
-## 系統架構
-
-### 數據模型
-
-目前實現的數據模型包括：
-- `Appointment`: 客戶預約（包含員工指定機制）
-- `Business`: 商家信息
-- `Branch`: 門店信息
-- `BranchService`: 門店服務關聯
-- `BranchSpecialDay`: 門店特殊營業日
-- `BusinessAnalysis`: 業務分析數據
-- `BusinessGoal`: 業務目標
-- `Customer`: 客戶資料
-- `Service`: 服務項目
-- `Staff`: 員工資料（支持多門店分配和服務能力管理）
-- `ServiceHistory`: 服務歷史記錄
-- `User`: 用戶資料
-- `SubscriptionPlan`: 訂閱方案
-- `Subscription`: 訂閱狀態
-- `Billing`: 帳單記錄
-
-### 業務目標系統
-
-系統支持三層級的業務目標管理：
-
-#### 目標層級
-- **企業目標 (Business Level)**：整體公司層面的目標，如總營收、總客戶數等
-- **門店目標 (Branch Level)**：單一門店的目標，如門店月營收、客戶回訪率等
-- **員工目標 (Staff Level)**：個人績效目標，如個人營收、服務數量、客戶滿意度等
-
-#### 目標類型
-- **營業額 (Revenue)**：營收相關目標
-- **回訪率 (Revisit Rate)**：客戶回訪相關目標
-- **客戶數 (Customer Count)**：新增客戶數目標
-- **服務數 (Service Count)**：服務次數目標
-- **利潤率 (Profit Margin)**：利潤相關目標
-- **自定義 (Custom)**：其他自定義目標類型
-
-#### 目標展示組件
-- **GoalSummaryCard**：目標概覽卡片，展示各層級目標的整體達成率
-- **GoalAchievementCard**：詳細目標達成卡片，按層級分組展示具體目標進度
-
-### 模擬數據
-
-系統提供豐富的模擬數據供開發測試使用：
-- **6 個門店**: 涵蓋不同地區和客群定位（總店、信義、西門、板橋、天母、內湖）
-- **26 項服務**: 包含美髮、美甲、睫毛、護膚、半永久化妝、其他等 6 大類別
-- **99 個門店服務配置**: 每個門店都有不同的服務組合和定價策略
-- **10 位員工**: 涵蓋不同職位（店主、經理、資深設計師、設計師、助理、櫃檯），支持多門店工作和多項服務技能
-- **12 個預約記錄**: 包含員工指定和未指定的混合預約，展示不同的業務場景
-- **9 個業務目標**: 包含企業層級3個、門店層級3個、員工層級3個，涵蓋營收、服務數量、客戶數、回訪率等不同類型
-- **訂閱和帳單數據**: 包含 Business 方案訂閱和相應的月度帳單記錄
-
-#### 員工模擬數據
-- **員工信息**：9個測試員工，包含不同角色（主理人、設計師、助理等）
-- **排班信息**：包含員工的工作時間表和休假安排
-- **服務能力**：每個員工的專精服務項目
-- **跨門店工作**：部分員工在多個門店提供服務
-
-#### 員工績效分析數據
-- **9位員工的完整績效數據**：包含王小美、李美麗、張設計師等員工的詳細分析
-- **跨門店績效追蹤**：每位員工在不同門店的收益、預約數、客戶數等指標
-- **服務收益分析**：詳細記錄每位員工各項服務的收益貢獻和占比
-- **門店收益分布**：分析員工收益主要來源門店，支持人員配置優化
-- **績效排行功能**：自動計算和排序員工總收益，識別明星員工
-
-詳細的模擬數據說明請參考 [模擬數據指南](docs/mock_data_guide.md)。
-
-### 服務層
-
-- `AuthService`: 處理用戶認證和身份驗證
-- `MockApiService`: 模擬API服務，用於開發階段
-- `MockDataService`: 提供模擬數據
-- `MockSubscriptionService`: 提供訂閱和帳單模擬服務
-
-### 組件層
-
-- `AppointmentFormDialog`: 預約表單彈窗組件
-- `BranchServiceFormDialog`: 門店服務表單彈窗組件
-- `ServiceFormDialog`: 服務項目表單彈窗組件
-- `BranchPerformanceCard`: 門店績效卡片組件
-- `StaffPerformanceCard`: 員工績效卡片組件
-- `StaffPerformanceSummaryCard`: 員工績效摘要卡片組件
-- `GoalSummaryCard`: 目標概覽卡片組件
-- `GoalAchievementCard`: 目標達成詳情卡片組件
-
-## 系統需求
-
-- Flutter SDK >= 3.0.0
-- Dart SDK >= 3.0.0
-- 支持 iOS、Android、Web、macOS、Windows 和 Linux
-
-## 開始使用
-
-### 安裝
-
-1. 確保已安裝 Flutter 開發環境：
-   ```
-   flutter doctor
-   ```
-
-2. 複製專案：
-   ```
-   git clone https://github.com/yourusername/BeautyAI_Front.git
-   cd BeautyAI_Front
-   ```
-
-3. 安裝依賴：
-   ```
-   flutter pub get
-   ```
-
-4. 執行應用：
-   ```
-   flutter run
-   ```
-
-### 配置
-
-編輯 `lib/services/mock_api_service.dart` 連接到正確的 API 後端：
-
-- 開發環境：`http://localhost:8080/api/v1`
-- 生產環境：`https://api.beautyaigo.com/api/v1`
-
-### 帳號管理
-
-- **登入**：使用現有帳號登入系統
-- **註冊**：新用戶可以自行註冊帳號，提供姓名、店家名稱、電子郵件和密碼
-- **測試帳號**：
-  - 管理員：admin@beauty.com / 123456
-  - 員工：staff@beauty.com / 123456
-
-### 業務目標管理
-
-- **目標設定**：在業務目標管理頁面設定企業、門店、員工三層級目標
-- **進度追蹤**：在儀表板查看各層級目標的達成進度
-- **門店篩選**：可按門店篩選查看特定門店的目標達成情況
-- **即時更新**：目標進度會根據實際業務數據即時更新
-
-### 方案管理
-
-- **方案選擇**：在方案管理頁面選擇適合的訂閱方案
-- **升級方案**：可隨時從 Basic 升級到 Business 方案
-- **門店限制**：Basic 方案限制單一門店，Business 方案支持無限門店
-- **員工計費**：根據實際員工數量計算月費
-
-### 帳單管理
-
-- **自動生成**：系統每月自動生成帳單
-- **多種付款方式**：支持信用卡、銀行轉帳、現金等付款方式
-- **帳單統計**：提供已付款、待付款、逾期等統計資訊
-- **付款提醒**：到期前提供付款提醒
-
-## 專案結構 (Monorepo)
-
 ```
-BeautyAI_Monorepo/
-├── frontend/                 # Flutter 前端應用
+BeautyAI/
+├── frontend/                 # Flutter 跨平台應用
 │   ├── lib/
 │   │   ├── components/       # 通用UI組件
 │   │   ├── models/          # 數據模型
 │   │   ├── screens/         # 應用界面
 │   │   ├── services/        # API和業務邏輯服務
-│   │   ├── widgets/         # 可重用UI小部件
-│   │   ├── routes/          # 路由配置
 │   │   └── main.dart        # 應用入口點
-│   ├── pubspec.yaml
-│   ├── android/
-│   ├── ios/
-│   ├── web/
-│   └── ...
-├── backend/                  # Node.js 後端 API
-│   ├── src/
-│   │   ├── controllers/     # API 控制器
-│   │   ├── models/          # 數據模型 (Mongoose/Sequelize)
-│   │   ├── routes/          # API 路由
-│   │   ├── services/        # 業務邏輯服務
-│   │   ├── middleware/      # 中間件
-│   │   ├── utils/           # 工具函數
-│   │   └── app.js          # Express 應用
-│   ├── package.json
-│   ├── .env.example
-│   └── ...
-├── shared/                   # 共享類型定義和工具
-│   ├── types/               # TypeScript 類型定義
-│   ├── constants/           # 常數定義
-│   └── utils/               # 共用工具函數
+│   ├── android/             # Android 平台配置
+│   ├── ios/                 # iOS 平台配置
+│   ├── web/                 # Web 平台配置
+│   └── pubspec.yaml         # Flutter 依賴配置
+├── backend/                  # Go + Gin 後端 API
+│   ├── cmd/server/          # 應用程式入口點
+│   ├── internal/            # 私有應用程式代碼
+│   │   ├── handlers/        # HTTP 處理器
+│   │   ├── models/          # 數據模型
+│   │   ├── services/        # 業務邏輯層
+│   │   └── repository/      # 數據存取層
+│   ├── pkg/                 # 可重用的包
+│   ├── migrations/          # 資料庫遷移
+│   └── go.mod               # Go 模塊定義
 ├── docs/                     # 專案文檔
 │   ├── api/                 # API 文檔
-│   ├── database/            # 資料庫設計文檔
-│   └── deployment/          # 部署指南
-├── scripts/                  # 建置和部署腳本
+│   └── database/            # 資料庫設計文檔
 ├── docker-compose.yml        # Docker 容器配置
-├── .gitignore
-├── README.md
-└── package.json             # 根目錄 workspace 配置
+└── README.md                # 專案說明文檔
 ```
 
-## 依賴項
+## 技術棧
 
-- **UI和交互**: 
-  - Flutter Material Design
-  - cupertino_icons: ^1.0.2
-- **路由管理**: 
-  - go_router: ^14.6.2
-- **圖表和數據可視化**: 
-  - fl_chart: ^0.66.2
-- **日期和日曆**: 
-  - table_calendar: ^3.1.3
-  - intl: ^0.19.0
-- **媒體管理**: 
-  - image_picker: ^1.0.7
-- **其他工具**: 
-  - uuid: ^4.3.3
-  - path: ^1.8.3
-
-## 技術堆疊
-
-- **前端框架**: Flutter, Dart
+### 前端 (Flutter)
+- **框架**: Flutter 3.0+ / Dart 3.0+
+- **平台支持**: iOS、Android、Web、Desktop
+- **UI 框架**: Material Design 3
 - **路由管理**: go_router
-- **UI組件**: Material Design, Cupertino Icons
-- **圖表和數據可視化**: fl_chart
-- **日期和日曆**: table_calendar, intl
-- **媒體管理**: image_picker
-- **開發工具**: flutter_lints
+- **圖表可視化**: fl_chart
+- **狀態管理**: Provider / Riverpod
 
-## 開發團隊
+### 後端 (Go)
+- **語言**: Go 1.21+
+- **框架**: Gin (HTTP Web Framework)
+- **資料庫**: PostgreSQL (主要) / MongoDB (可選)
+- **快取**: Redis
+- **ORM**: GORM (PostgreSQL) / MongoDB Driver
+- **身份驗證**: JWT
+- **文檔**: Swagger
+- **容器化**: Docker & Docker Compose
 
-有任何技術問題，請聯繫開發團隊：dev@beautyaigo.com
+### 基礎設施
+- **資料庫**: PostgreSQL 14+ / MongoDB 6+
+- **快取**: Redis 7+
+- **容器化**: Docker & Docker Compose
+- **部署**: Cloud platforms (AWS, GCP, Azure)
 
-## 後續開發計劃
+## 快速開始
 
-- 整合真實API後端
-- 改進AI助理功能，增加更多智能推薦
-- 實現自動續費功能
-- 加入發票開立功能
-- 優化UI/UX設計
-- 實現通知系統
-- 多語言支持
-- 雲端同步備份
-- 實現離線模式
-- 優化性能
-- 增加更多數據分析功能
-- 實現電子發票系統
-- 添加財務報表分析
-- 增強業務目標自動化設定
-- 添加目標達成預測功能
+### 環境需求
 
-## 技術實作亮點
+- **前端**: Flutter SDK >= 3.0.0, Dart SDK >= 3.0.0
+- **後端**: Go 1.21+, PostgreSQL 14+, Redis 7+
+- **工具**: Docker & Docker Compose (推薦)
 
-### 員工績效分析系統
-- **數據模型設計**：創建了`StaffPerformanceAnalysis`等複合數據模型，支持多層級績效數據結構
-- **跨門店數據整合**：員工可在多個門店工作，系統自動整合各門店的績效數據
-- **智能數據計算**：自動計算收益分布百分比、排行榜順序、平均值等關鍵指標
-- **視覺化圖表**：整合fl_chart套件，提供圓餅圖、柱狀圖等豐富的數據視覺化效果
-- **響應式界面**：左右分屏設計，適配不同螢幕尺寸，提供最佳用戶體驗
+### 快速部署 (Docker)
 
-### 業務目標管理系統
-- **三層級目標架構**：企業目標→門店目標→員工目標的完整目標管理體系
-- **動態進度計算**：即時計算目標達成率，支援多種目標類型（營收、客戶數、服務數等）
-- **智能分組展示**：按組織層級自動分組，清晰展現目標層次關係
-- **門店篩選整合**：目標展示與門店篩選功能深度整合，提供精準的數據檢視
+```bash
+# 克隆專案
+git clone https://github.com/yourusername/BeautyAI.git
+cd BeautyAI
 
-### 現代化UI/UX設計
-- **Material Design 3**：採用最新設計規範，提供現代化的視覺體驗
-- **組件化架構**：高度模組化的組件設計，便於維護和擴展
-- **智能顏色編碼**：使用直觀的顏色系統表達不同的數據狀態和重要程度
-- **流暢動畫效果**：適當的過渡動畫，提升用戶互動體驗
+# 啟動所有服務 (資料庫、後端、前端)
+docker-compose up --build
+
+# 訪問應用
+# 前端: http://localhost:3001
+# 後端 API: http://localhost:3000
+# API 文檔: http://localhost:3000/swagger/index.html
+```
+
+### 本地開發
+
+1. **啟動資料庫服務**
+   ```bash
+   docker-compose up postgres redis -d
+   ```
+
+2. **啟動後端服務**
+   ```bash
+   cd backend
+   cp .env.example .env
+   # 編輯 .env 配置資料庫連線
+   go run cmd/server/main.go
+   ```
+
+3. **啟動前端應用**
+   ```bash
+   cd frontend
+   flutter pub get
+   flutter run -d web --web-port 3001
+   ```
+
+## 系統功能
+
+### 核心功能模塊
+
+- **門店績效分析**: 營運數據概覽和重要指標分析
+- **預約管理**: 客戶預約排程、員工指定和衝突檢查
+- **客戶管理**: 客戶資料和服務歷史記錄管理
+- **服務管理**: 美容服務項目管理和多門店定價
+- **員工管理**: 員工資料、多門店分配、排班和績效管理
+- **業務目標管理**: 三層級目標設定與追蹤 (企業/門店/員工)
+- **AI 助理**: 智能業務推薦和決策支持
+- **方案管理**: 訂閱方案選擇和升級管理
+- **帳單管理**: 費用帳單查看和付款處理
+- **用戶管理**: 多角色權限和身份驗證
+
+### 訂閱方案
+
+#### Basic 基礎版 (NT$ 300/員工/月)
+- 適合單一門店的美容業者
+- 單一門店管理、基礎預約管理
+- 客戶資料管理、員工管理
+- 基礎報表分析、AI 助理
+- 基礎技術支援
+
+#### Business 商業版 (NT$ 450/員工/月)
+- 適合多門店連鎖美容業者
+- 多門店管理（無限制）、進階預約管理
+- 多門店庫存管理、進階權限控制
+- 進階報表分析、自訂報表
+- 優先技術支援
+
+## 前後端整合
+
+### API 通信架構
+
+```
+Flutter Frontend ←→ HTTP/JSON ←→ Go Gin Backend ←→ PostgreSQL/MongoDB
+                                       ↓
+                                    Redis Cache
+```
+
+### 認證流程
+
+1. **用戶登入**: 前端發送登入請求到後端
+2. **JWT 簽發**: 後端驗證成功後簽發 JWT Token
+3. **Token 存儲**: 前端存儲 Token 並加入 HTTP Headers
+4. **請求認證**: 所有 API 請求都攜帶 Token 進行身份驗證
+5. **Token 刷新**: 自動刷新即將到期的 Token
+
+### 數據同步
+
+- **即時更新**: 使用 WebSocket 或 Server-Sent Events 進行即時數據推送
+- **離線支持**: 前端本地快取，支持離線查看和操作
+- **衝突解決**: 智能合併策略處理資料衝突
+
+## 開發環境設置
+
+### API 端點配置
+
+開發和生產環境的 API 端點配置：
+
+```dart
+// frontend/lib/config/api_config.dart
+class ApiConfig {
+  static const String devBaseUrl = 'http://localhost:3000/api/v1';
+  static const String prodBaseUrl = 'https://api.beautyai.com/api/v1';
+}
+```
+
+### 環境變數
+
+**後端環境變數 (.env)**:
+```env
+# 伺服器配置
+PORT=3000
+NODE_ENV=development
+
+# 資料庫配置
+DATABASE_TYPE=postgres
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=beautyai
+DB_USER=postgres
+DB_PASSWORD=password
+
+# Redis 配置
+REDIS_HOST=localhost
+REDIS_PORT=6379
+
+# JWT 配置
+JWT_SECRET=your-secret-key
+JWT_EXPIRES_IN=24h
+```
+
+## 部署指南
+
+### 生產環境部署
+
+1. **使用 Docker Compose**
+   ```bash
+   # 生產環境配置
+   docker-compose --profile production up -d
+   ```
+
+2. **雲端部署**
+   - **後端**: 部署到 Google Cloud Run / AWS ECS / Azure Container Instances
+   - **前端**: 部署到 Netlify / Vercel / Firebase Hosting
+   - **資料庫**: 使用雲端資料庫服務 (Cloud SQL, RDS, Atlas)
+
+### CI/CD 流程
+
+```yaml
+# .github/workflows/deploy.yml
+name: Deploy BeautyAI
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy Backend
+        run: |
+          cd backend
+          # Build and deploy Go backend
+  
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy Frontend
+        run: |
+          cd frontend
+          # Build and deploy Flutter web
+```
+
+## 監控和維護
+
+### 系統監控
+
+- **後端監控**: 使用 Prometheus + Grafana 監控 API 性能
+- **前端監控**: 整合 Firebase Analytics / Google Analytics
+- **錯誤追蹤**: Sentry 進行錯誤監控和報告
+- **日誌管理**: ELK Stack (Elasticsearch, Logstash, Kibana)
+
+### 效能優化
+
+- **後端**: 資料庫索引優化、Redis 快取策略、API 響應壓縮
+- **前端**: 代碼分割、圖片懶加載、離線快取策略
+- **網路**: CDN 配置、GZIP 壓縮、HTTP/2 支援
+
+## 開發團隊和貢獻
+
+### 開發規範
+
+- **代碼風格**: 
+  - Go: `gofmt` + `golangci-lint`
+  - Flutter: `dart format` + `flutter_lints`
+- **提交規範**: 遵循 Conventional Commits
+- **分支策略**: GitFlow 工作流程
+- **代碼審查**: 所有 PR 都需要代碼審查
+
+### 貢獻指南
+
+1. Fork 專案並創建功能分支
+2. 遵循代碼規範和測試覆蓋率要求
+3. 更新相關文檔
+4. 提交 Pull Request 並等待審查
+
+## 技術支援
+
+- **文檔**: 詳見 `docs/` 目錄
+- **問題回報**: GitHub Issues
+- **技術討論**: GitHub Discussions
+- **聯繫方式**: dev@beautyai.com
+
+## 許可證
+
+MIT License - 詳見 [LICENSE](LICENSE) 檔案
