@@ -42,6 +42,11 @@ type LoginResponse struct {
 	ExpiresAt    int64                `json:"expires_at"`
 }
 
+// RefreshTokenRequest represents the refresh token request payload
+type RefreshTokenRequest struct {
+	RefreshToken string `json:"refresh_token" binding:"required"`
+}
+
 // Register godoc
 // @Summary Register a new user
 // @Description Register a new user account with business information
@@ -53,7 +58,7 @@ type LoginResponse struct {
 // @Failure 400 {object} AuthResponse
 // @Failure 409 {object} AuthResponse
 // @Failure 500 {object} AuthResponse
-// @Router /auth/register [post]
+// @Router /api/v1/auth/register [post]
 func (h *AuthHandler) Register(c *gin.Context) {
 	var req models.RegisterRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -142,7 +147,7 @@ func (h *AuthHandler) Register(c *gin.Context) {
 // @Failure 400 {object} AuthResponse
 // @Failure 401 {object} AuthResponse
 // @Failure 500 {object} AuthResponse
-// @Router /auth/login [post]
+// @Router /api/v1/auth/login [post]
 func (h *AuthHandler) Login(c *gin.Context) {
 	var req models.LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -214,7 +219,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 // @Security BearerAuth
 // @Produce json
 // @Success 200 {object} AuthResponse
-// @Router /auth/logout [post]
+// @Router /api/v1/auth/logout [post]
 func (h *AuthHandler) Logout(c *gin.Context) {
 	userID := c.GetString("user_id")
 	h.logger.Info("User logout", zap.String("user_id", userID))
@@ -238,7 +243,7 @@ func (h *AuthHandler) Logout(c *gin.Context) {
 // @Failure 401 {object} AuthResponse
 // @Failure 404 {object} AuthResponse
 // @Failure 500 {object} AuthResponse
-// @Router /auth/me [get]
+// @Router /api/v1/auth/me [get]
 func (h *AuthHandler) GetProfile(c *gin.Context) {
 	userID := c.GetString("user_id")
 	h.logger.Info("Get user profile", zap.String("user_id", userID))
@@ -278,12 +283,8 @@ func (h *AuthHandler) GetProfile(c *gin.Context) {
 // @Failure 400 {object} AuthResponse
 // @Failure 401 {object} AuthResponse
 // @Failure 500 {object} AuthResponse
-// @Router /auth/refresh [post]
+// @Router /api/v1/auth/refresh [post]
 func (h *AuthHandler) RefreshToken(c *gin.Context) {
-	type RefreshTokenRequest struct {
-		RefreshToken string `json:"refresh_token" binding:"required"`
-	}
-
 	var req RefreshTokenRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		h.logger.Error("Invalid refresh token request", zap.Error(err))
@@ -354,7 +355,7 @@ func (h *AuthHandler) RefreshToken(c *gin.Context) {
 // @Failure 401 {object} AuthResponse
 // @Failure 404 {object} AuthResponse
 // @Failure 500 {object} AuthResponse
-// @Router /auth/profile [put]
+// @Router /api/v1/auth/profile [put]
 func (h *AuthHandler) UpdateProfile(c *gin.Context) {
 	userID := c.GetString("user_id")
 
@@ -408,7 +409,7 @@ func (h *AuthHandler) UpdateProfile(c *gin.Context) {
 // @Failure 401 {object} AuthResponse
 // @Failure 404 {object} AuthResponse
 // @Failure 500 {object} AuthResponse
-// @Router /auth/change-password [post]
+// @Router /api/v1/auth/change-password [post]
 func (h *AuthHandler) ChangePassword(c *gin.Context) {
 	userID := c.GetString("user_id")
 

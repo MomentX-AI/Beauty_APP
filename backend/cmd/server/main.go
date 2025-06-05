@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	_ "beautyai-backend/docs" // swagger docs
 	"beautyai-backend/internal/handlers"
 	"beautyai-backend/internal/middleware"
 	"beautyai-backend/internal/models"
@@ -12,6 +13,8 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"go.uber.org/zap"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -28,7 +31,7 @@ import (
 // @license.name MIT
 // @license.url https://opensource.org/licenses/MIT
 
-// @host localhost:3000
+// @host localhost:3001
 // @BasePath /api/v1
 
 // @securityDefinitions.apikey BearerAuth
@@ -250,6 +253,9 @@ func setupRoutes(router *gin.Engine, db *gorm.DB, logger *zap.Logger) {
 		//     protected.POST("/appointments", appointmentHandler.CreateAppointment)
 		// }
 	}
+
+	// Swagger documentation
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	logger.Info("Routes configured successfully")
 }

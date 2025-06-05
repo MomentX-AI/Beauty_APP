@@ -2,6 +2,33 @@
 
 BeautyAI 是一款專為美容沙龍和美容業者設計的全棧應用，提供完整的美容業務管理解決方案。本專案採用現代化的技術架構，包含 Flutter 跨平台前端應用和 Go 語言後端 API 服務。
 
+## 🚀 項目狀態
+
+- **後端 API**: ✅ 核心認證功能已完成並通過測試
+- **資料庫**: ✅ PostgreSQL 模式設計完成，支援完整業務邏輯
+- **文檔**: ✅ Swagger API 文檔已生成並可訪問
+- **測試**: ✅ 註冊、登入、用戶管理功能已驗證
+- **前端**: 🚧 Flutter 應用開發中
+
+## 📚 API 文檔
+
+後端提供完整的 RESTful API，包含詳細的 Swagger 文檔：
+
+- **API 文檔**: http://localhost:3001/swagger/index.html
+- **健康檢查**: http://localhost:3001/health
+- **基礎路徑**: `/api/v1`
+
+### 已實作的 API 端點
+
+#### 🔐 身份驗證 API
+- `POST /api/v1/auth/register` - 用戶註冊
+- `POST /api/v1/auth/login` - 用戶登入  
+- `POST /api/v1/auth/logout` - 用戶登出
+- `GET /api/v1/auth/me` - 獲取當前用戶資料
+- `PUT /api/v1/auth/profile` - 更新用戶資料
+- `POST /api/v1/auth/refresh` - 刷新 JWT Token
+- `POST /api/v1/auth/change-password` - 修改密碼
+
 ## 專案架構
 
 ```
@@ -47,44 +74,78 @@ BeautyAI/
 ### 後端 (Go)
 - **語言**: Go 1.21+
 - **框架**: Gin (HTTP Web Framework)
-- **資料庫**: PostgreSQL (主要) / MongoDB (可選)
-- **快取**: Redis
+- **資料庫**: PostgreSQL 15+ (主要) / MongoDB (可選)
+- **快取**: Redis 7+
 - **ORM**: GORM (PostgreSQL) / MongoDB Driver
-- **身份驗證**: JWT
-- **文檔**: Swagger
+- **身份驗證**: JWT (JSON Web Tokens)
+- **API 文檔**: Swagger / OpenAPI 3.0
+- **日誌**: Zap (結構化日誌)
 - **容器化**: Docker & Docker Compose
 
 ### 基礎設施
-- **資料庫**: PostgreSQL 14+ / MongoDB 6+
+- **資料庫**: PostgreSQL 15+ / MongoDB 6+
 - **快取**: Redis 7+
 - **容器化**: Docker & Docker Compose
+- **反向代理**: Nginx
 - **部署**: Cloud platforms (AWS, GCP, Azure)
 
-## 快速開始
+## 🏗️ 專案架構
+
+```
+BeautyAI/
+├── frontend/                    # Flutter 跨平台應用
+│   ├── lib/
+│   │   ├── components/          # 通用UI組件
+│   │   ├── models/             # 數據模型
+│   │   ├── screens/            # 應用界面
+│   │   ├── services/           # API和業務邏輯服務
+│   │   └── main.dart           # 應用入口點
+│   ├── android/                # Android 平台配置
+│   ├── ios/                    # iOS 平台配置
+│   ├── web/                    # Web 平台配置
+│   └── pubspec.yaml            # Flutter 依賴配置
+├── backend/                     # Go + Gin 後端 API
+│   ├── cmd/server/             # 應用程式入口點
+│   ├── internal/               # 私有應用程式代碼
+│   │   ├── handlers/           # HTTP 處理器 (Controllers)
+│   │   ├── models/             # 數據模型
+│   │   ├── services/           # 業務邏輯層
+│   │   ├── middleware/         # 中間件
+│   │   └── utils/              # 工具函數
+│   ├── docs/                   # Swagger API 文檔
+│   ├── migrations/             # 資料庫遷移文件
+│   ├── pkg/                    # 可重用的包
+│   └── go.mod                  # Go 模塊定義
+├── nginx/                       # Nginx 配置
+├── docker-compose.yml           # Docker 容器配置
+└── README.md                   # 專案說明文檔
+```
+
+## 🚀 快速開始
 
 ### 環境需求
 
 - **前端**: Flutter SDK >= 3.0.0, Dart SDK >= 3.0.0
-- **後端**: Go 1.21+, PostgreSQL 14+, Redis 7+
+- **後端**: Go 1.21+, PostgreSQL 15+, Redis 7+
 - **工具**: Docker & Docker Compose (推薦)
 
-### 快速部署 (Docker)
+### 🐳 快速部署 (Docker)
 
 ```bash
 # 克隆專案
-git clone https://github.com/yourusername/BeautyAI.git
-cd BeautyAI
+git clone https://github.com/MomentX-AI/Beauty_APP.git
+cd Beauty_APP
 
 # 啟動所有服務 (資料庫、後端、前端)
 docker-compose up --build
 
 # 訪問應用
 # 前端: http://localhost:3001
-# 後端 API: http://localhost:3000
-# API 文檔: http://localhost:3000/swagger/index.html
+# 後端 API: http://localhost:3001
+# API 文檔: http://localhost:3001/swagger/index.html
 ```
 
-### 本地開發
+### 🛠️ 本地開發
 
 1. **啟動資料庫服務**
    ```bash
@@ -106,22 +167,27 @@ docker-compose up --build
    flutter run -d web --web-port 3001
    ```
 
-## 系統功能
+4. **訪問應用**
+   - 健康檢查: http://localhost:3001/health
+   - API 文檔: http://localhost:3001/swagger/index.html
 
-### 核心功能模塊
+## ✨ 系統功能
 
-- **門店績效分析**: 營運數據概覽和重要指標分析
-- **預約管理**: 客戶預約排程、員工指定和衝突檢查
-- **客戶管理**: 客戶資料和服務歷史記錄管理
-- **服務管理**: 美容服務項目管理和多門店定價
-- **員工管理**: 員工資料、多門店分配、排班和績效管理
-- **業務目標管理**: 三層級目標設定與追蹤 (企業/門店/員工)
-- **AI 助理**: 智能業務推薦和決策支持
-- **方案管理**: 訂閱方案選擇和升級管理
-- **帳單管理**: 費用帳單查看和付款處理
-- **用戶管理**: 多角色權限和身份驗證
+### 🎯 核心功能模塊
 
-### 訂閱方案
+- **👤 用戶管理**: 多角色權限和身份驗證 ✅
+- **🏢 門店管理**: 多門店資料和營運設定
+- **👥 員工管理**: 員工資料、多門店分配、排班和績效管理
+- **🧑‍🤝‍🧑 客戶管理**: 客戶資料和服務歷史記錄管理
+- **💅 服務管理**: 美容服務項目管理和多門店定價
+- **📅 預約管理**: 客戶預約排程、員工指定和衝突檢查
+- **🎯 業務目標管理**: 三層級目標設定與追蹤 (企業/門店/員工)
+- **📊 門店績效分析**: 營運數據概覽和重要指標分析
+- **🤖 AI 助理**: 智能業務推薦和決策支持
+- **💳 方案管理**: 訂閱方案選擇和升級管理
+- **💰 帳單管理**: 費用帳單查看和付款處理
+
+### 💎 訂閱方案
 
 #### Basic 基礎版 (NT$ 300/員工/月)
 - 適合單一門店的美容業者
@@ -137,7 +203,81 @@ docker-compose up --build
 - 進階報表分析、自訂報表
 - 優先技術支援
 
-## 前後端整合
+## 🔧 開發和測試
+
+### API 測試結果
+
+我們已完成核心認證功能的開發和測試：
+
+```json
+{
+  "認證功能測試": {
+    "用戶註冊": "✅ 通過",
+    "重複註冊檢查": "✅ 通過 (409 錯誤)",
+    "密碼驗證": "✅ 通過 (最少6位)",
+    "電子郵件驗證": "✅ 通過 (格式檢查)",
+    "JWT Token 生成": "✅ 通過",
+    "用戶登入": "✅ 通過",
+    "Token 刷新": "✅ 通過",
+    "用戶資料獲取": "✅ 通過",
+    "密碼修改": "✅ 通過"
+  },
+  "資料庫": {
+    "PostgreSQL 連接": "✅ 正常",
+    "自動遷移": "✅ 完成",
+    "資料持久化": "✅ 正常"
+  },
+  "安全性": {
+    "密碼加密": "✅ bcrypt",
+    "JWT 認證": "✅ 正常",
+    "CORS 配置": "✅ 完成"
+  }
+}
+```
+
+### 快速測試
+
+```bash
+# 測試註冊功能
+cd backend && chmod +x test_register.sh && ./test_register.sh
+
+# 手動測試 API
+curl -X POST http://localhost:3001/api/v1/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "test@beautyai.com",
+    "password": "password123",
+    "name": "測試用戶",
+    "businessName": "測試美容院"
+  }'
+```
+
+### 環境變數
+
+**後端環境變數 (.env)**:
+```env
+# 伺服器配置
+PORT=3001
+NODE_ENV=development
+
+# 資料庫配置
+DATABASE_TYPE=postgres
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=beautyai
+DB_USER=postgres
+DB_PASSWORD=password
+
+# Redis 配置
+REDIS_HOST=localhost
+REDIS_PORT=6379
+
+# JWT 配置
+JWT_SECRET=your-secret-key
+JWT_EXPIRES_IN=24h
+```
+
+## 🏛️ 前後端整合
 
 ### API 通信架構
 
@@ -173,31 +313,6 @@ class ApiConfig {
   static const String devBaseUrl = 'http://localhost:3000/api/v1';
   static const String prodBaseUrl = 'https://api.beautyai.com/api/v1';
 }
-```
-
-### 環境變數
-
-**後端環境變數 (.env)**:
-```env
-# 伺服器配置
-PORT=3000
-NODE_ENV=development
-
-# 資料庫配置
-DATABASE_TYPE=postgres
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=beautyai
-DB_USER=postgres
-DB_PASSWORD=password
-
-# Redis 配置
-REDIS_HOST=localhost
-REDIS_PORT=6379
-
-# JWT 配置
-JWT_SECRET=your-secret-key
-JWT_EXPIRES_IN=24h
 ```
 
 ## 部署指南

@@ -2,16 +2,45 @@
 
 BeautyAI 美容管理系統的後端 API，使用 Go 語言和 Gin 框架構建，提供高效能、可擴展的 RESTful API 服務。
 
+## 🚀 開發狀態
+
+- **✅ 核心認證系統**: 用戶註冊、登入、JWT 認證完成
+- **✅ 資料庫設計**: PostgreSQL 模式和遷移完成
+- **✅ API 文檔**: Swagger/OpenAPI 文檔已生成
+- **✅ 測試驗證**: 核心功能已通過完整測試
+- **🚧 業務邏輯**: 預約、客戶、員工管理模組開發中
+
+## 📚 API 文檔
+
+本專案提供完整的 Swagger API 文檔：
+
+- **文檔地址**: http://localhost:3001/swagger/index.html
+- **API 規格**: OpenAPI 3.0
+- **基礎路徑**: `/api/v1`
+- **健康檢查**: http://localhost:3001/health
+
+### 🔐 已實作的認證 API
+
+| 端點 | 方法 | 功能 | 狀態 |
+|------|------|------|------|
+| `/api/v1/auth/register` | POST | 用戶註冊 | ✅ 完成 |
+| `/api/v1/auth/login` | POST | 用戶登入 | ✅ 完成 |
+| `/api/v1/auth/logout` | POST | 用戶登出 | ✅ 完成 |
+| `/api/v1/auth/me` | GET | 獲取用戶資料 | ✅ 完成 |
+| `/api/v1/auth/refresh` | POST | 刷新 Token | ✅ 完成 |
+| `/api/v1/auth/profile` | PUT | 更新用戶資料 | ✅ 完成 |
+| `/api/v1/auth/change-password` | POST | 修改密碼 | ✅ 完成 |
+
 ## 技術棧
 
 - **語言**: Go 1.21+
 - **框架**: Gin (HTTP Web Framework)
-- **資料庫**: PostgreSQL (主要) / MongoDB (可選)
-- **快取**: Redis
+- **資料庫**: PostgreSQL 15+ (主要) / MongoDB (可選)
+- **快取**: Redis 7+
 - **ORM**: GORM (PostgreSQL) / MongoDB Driver
-- **身份驗證**: JWT
-- **日誌**: Zap
-- **文檔**: Swagger
+- **身份驗證**: JWT (JSON Web Tokens)
+- **API 文檔**: Swagger/OpenAPI 3.0 (swag)
+- **日誌**: Zap (結構化日誌)
 - **配置**: Viper + 環境變數
 - **容器化**: Docker & Docker Compose
 
@@ -138,10 +167,70 @@ cp .env.example .env
 vim .env
 ```
 
+### ✅ 測試結果
+
+已完成核心認證功能的完整測試，所有測試均通過：
+
+```json
+{
+  "認證功能測試": {
+    "用戶註冊": "✅ 通過 (201 狀態碼)",
+    "重複註冊防護": "✅ 通過 (409 衝突)",
+    "密碼強度驗證": "✅ 通過 (最少6位)",
+    "電子郵件格式驗證": "✅ 通過",
+    "JWT Token 生成": "✅ 通過",
+    "Token 刷新機制": "✅ 通過",
+    "用戶資料獲取": "✅ 通過",
+    "密碼修改": "✅ 通過",
+    "用戶登出": "✅ 通過"
+  },
+  "安全性測試": {
+    "密碼 bcrypt 加密": "✅ 通過",
+    "JWT 簽名驗證": "✅ 通過",
+    "CORS 跨域保護": "✅ 通過",
+    "輸入參數驗證": "✅ 通過"
+  },
+  "資料庫測試": {
+    "PostgreSQL 連接": "✅ 正常",
+    "自動遷移": "✅ 完成",
+    "外鍵約束": "✅ 正常",
+    "資料持久化": "✅ 正常",
+    "Redis 快取": "✅ 正常"
+  }
+}
+```
+
+### 🧪 快速測試
+
+```bash
+# 運行內建測試腳本
+cd backend
+chmod +x test_register.sh
+./test_register.sh
+
+# 手動測試註冊
+curl -X POST http://localhost:3001/api/v1/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "test@beautyai.com", 
+    "password": "password123",
+    "name": "測試用戶",
+    "businessName": "測試美容院"
+  }'
+
+# 測試登入
+curl -X POST http://localhost:3001/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "test@beautyai.com",
+    "password": "password123"
+  }'
+```
+
 **環境變數配置範例**:
 ```env
 # 伺服器配置
-PORT=3000
+PORT=3001
 GIN_MODE=debug
 CORS_ORIGINS=http://localhost:3001,http://localhost:3000
 
@@ -219,7 +308,7 @@ make swagger
 swag init -g cmd/server/main.go -o ./docs
 
 # 訪問文檔
-# http://localhost:3000/swagger/index.html
+# http://localhost:3001/swagger/index.html
 ```
 
 ## API 端點
@@ -733,7 +822,7 @@ services:
   backend:
     build: .
     ports:
-      - "3000:3000"
+      - "3001:3001"
     environment:
       - DATABASE_TYPE=postgres
       - DB_HOST=postgres
@@ -775,7 +864,7 @@ docker-compose --profile production up -d
 docker run -d \
   --name beautyai-backend \
   --env-file .env.production \
-  -p 3000:3000 \
+  -p 3001:3001 \
   beautyai-backend
 ```
 
