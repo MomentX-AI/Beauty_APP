@@ -1,24 +1,20 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
-	"net/http"
 	"os"
-	"os/signal"
-	"syscall"
-	"time"
 
-	"beautyai-backend/internal/config"
 	"beautyai-backend/internal/handlers"
 	"beautyai-backend/internal/middleware"
-	"beautyai-backend/pkg/database"
-	"beautyai-backend/pkg/logger"
+	"beautyai-backend/internal/models"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"go.uber.org/zap"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 // @title BeautyAI API
@@ -43,194 +39,217 @@ import (
 func main() {
 	// Load environment variables
 	if err := godotenv.Load(); err != nil {
-		log.Println("No .env file found, using environment variables")
+		log.Println("Warning: .env file not found")
 	}
-
-	// Initialize configuration
-	cfg := config.Load()
 
 	// Initialize logger
-	logger := logger.New(cfg.Log.Level, cfg.Log.Format)
+	logger, err := zap.NewProduction()
+	if err != nil {
+		log.Fatal("Failed to initialize logger:", err)
+	}
 	defer logger.Sync()
 
-	// Set Gin mode
-	if cfg.App.Environment == "production" {
-		gin.SetMode(gin.ReleaseMode)
+	// Initialize database
+	db, err := initDatabase(logger)
+	if err != nil {
+		logger.Fatal("Failed to initialize database", zap.Error(err))
 	}
 
-	// Initialize database
-	db, err := database.NewConnection(cfg)
-	if err != nil {
-		logger.Fatal("Failed to connect to database", zap.Error(err))
+	// Auto migrate database schemas
+	if err := autoMigrate(db, logger); err != nil {
+		logger.Fatal("Failed to migrate database", zap.Error(err))
 	}
 
 	// Initialize Gin router
-	router := gin.New()
+	router := gin.Default()
 
-	// Add middleware
-	router.Use(middleware.Logger(logger))
-	router.Use(middleware.Recovery(logger))
-	router.Use(middleware.CORS(cfg))
-	router.Use(middleware.RequestID())
-	router.Use(middleware.Security())
+	// Setup middleware
+	setupMiddleware(router, logger)
 
+	// Setup routes
+	setupRoutes(router, db, logger)
+
+	// Get port from environment
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "3001"
+	}
+
+	logger.Info("Starting server", zap.String("port", port))
+
+	// Start server
+	if err := router.Run(":" + port); err != nil {
+		logger.Fatal("Failed to start server", zap.Error(err))
+	}
+}
+
+// initDatabase initializes the database connection
+func initDatabase(logger *zap.Logger) (*gorm.DB, error) {
+	// Build database connection string
+	dbHost := os.Getenv("DB_HOST")
+	if dbHost == "" {
+		dbHost = "localhost"
+	}
+
+	dbPort := os.Getenv("DB_PORT")
+	if dbPort == "" {
+		dbPort = "5432"
+	}
+
+	dbName := os.Getenv("DB_NAME")
+	if dbName == "" {
+		dbName = "beautyai"
+	}
+
+	dbUser := os.Getenv("DB_USER")
+	if dbUser == "" {
+		dbUser = "postgres"
+	}
+
+	dbPassword := os.Getenv("DB_PASSWORD")
+	if dbPassword == "" {
+		dbPassword = "password"
+	}
+
+	sslMode := os.Getenv("DB_SSLMODE")
+	if sslMode == "" {
+		sslMode = "disable"
+	}
+
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=Asia/Taipei",
+		dbHost, dbUser, dbPassword, dbName, dbPort, sslMode)
+
+	logger.Info("Connecting to database", zap.String("host", dbHost), zap.String("port", dbPort), zap.String("database", dbName))
+
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		return nil, fmt.Errorf("failed to connect database: %w", err)
+	}
+
+	logger.Info("Database connected successfully")
+	return db, nil
+}
+
+// autoMigrate runs database migrations
+func autoMigrate(db *gorm.DB, logger *zap.Logger) error {
+	logger.Info("Running database migrations")
+
+	// Migrate in correct order - referenced tables first
+	err := db.AutoMigrate(
+		&models.Business{},     // Business must be created first
+		&models.User{},         // User references Business
+		&models.Branch{},       // Branch references Business
+		&models.Staff{},        // Staff references Business
+		&models.Customer{},     // Customer references Business
+		&models.Service{},      // Service references Business
+		&models.Appointment{},  // Appointment references multiple tables
+		&models.BusinessGoal{}, // BusinessGoal references Business, Branch, Staff
+		&models.SubscriptionPlan{},
+		&models.Subscription{},  // Subscription references Business and Plan
+		&models.Billing{},       // Billing references Business and Subscription
+		&models.BranchService{}, // BranchService references Branch and Service
+	)
+
+	if err != nil {
+		return fmt.Errorf("failed to migrate database: %w", err)
+	}
+
+	logger.Info("Database migrations completed successfully")
+	return nil
+}
+
+// setupMiddleware configures middleware for the router
+func setupMiddleware(router *gin.Engine, logger *zap.Logger) {
+	// CORS middleware
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{
+		"http://localhost:3000",
+		"http://localhost:3001",
+		"http://127.0.0.1:3000",
+		"http://127.0.0.1:3001",
+	}
+	config.AllowHeaders = []string{
+		"Origin",
+		"Content-Type",
+		"Accept",
+		"Authorization",
+		"X-Requested-With",
+	}
+	config.AllowCredentials = true
+	router.Use(cors.New(config))
+
+	// Request logging middleware
+	router.Use(gin.Logger())
+
+	// Recovery middleware
+	router.Use(gin.Recovery())
+}
+
+// setupRoutes configures all API routes
+func setupRoutes(router *gin.Engine, db *gorm.DB, logger *zap.Logger) {
 	// Health check endpoint
 	router.GET("/health", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"status":      "OK",
-			"timestamp":   time.Now().UTC(),
-			"environment": cfg.App.Environment,
-			"version":     "1.0.0",
+		c.JSON(200, gin.H{
+			"status":  "healthy",
+			"service": "beautyai-backend",
+			"version": "1.0.0",
 		})
 	})
 
-	// API routes
+	// Initialize handlers
+	authHandler := handlers.NewAuthHandler(db, logger)
+
+	// API v1 routes
 	v1 := router.Group("/api/v1")
 	{
-		// Initialize handlers
-		authHandler := handlers.NewAuthHandler(db, cfg, logger)
-		businessHandler := handlers.NewBusinessHandler(db, cfg, logger)
-		branchHandler := handlers.NewBranchHandler(db, cfg, logger)
-		staffHandler := handlers.NewStaffHandler(db, cfg, logger)
-		customerHandler := handlers.NewCustomerHandler(db, cfg, logger)
-		serviceHandler := handlers.NewServiceHandler(db, cfg, logger)
-		appointmentHandler := handlers.NewAppointmentHandler(db, cfg, logger)
-		analyticsHandler := handlers.NewAnalyticsHandler(db, cfg, logger)
-		subscriptionHandler := handlers.NewSubscriptionHandler(db, cfg, logger)
-		billingHandler := handlers.NewBillingHandler(db, cfg, logger)
-
-		// Auth routes
+		// Public authentication routes
 		auth := v1.Group("/auth")
 		{
 			auth.POST("/register", authHandler.Register)
 			auth.POST("/login", authHandler.Login)
-			auth.POST("/logout", middleware.AuthRequired(), authHandler.Logout)
-			auth.GET("/me", middleware.AuthRequired(), authHandler.GetProfile)
 			auth.POST("/refresh", authHandler.RefreshToken)
 		}
 
-		// Protected routes
-		protected := v1.Group("/")
-		protected.Use(middleware.AuthRequired())
+		// Protected authentication routes
+		authProtected := v1.Group("/auth")
+		authProtected.Use(middleware.AuthMiddleware(logger))
 		{
-			// Business routes
-			business := protected.Group("/business")
-			{
-				business.GET("/", businessHandler.GetBusiness)
-				business.PUT("/", businessHandler.UpdateBusiness)
-			}
-
-			// Branch routes
-			branches := protected.Group("/branches")
-			{
-				branches.GET("/", branchHandler.GetBranches)
-				branches.POST("/", branchHandler.CreateBranch)
-				branches.GET("/:id", branchHandler.GetBranch)
-				branches.PUT("/:id", branchHandler.UpdateBranch)
-				branches.DELETE("/:id", branchHandler.DeleteBranch)
-			}
-
-			// Staff routes
-			staff := protected.Group("/staff")
-			{
-				staff.GET("/", staffHandler.GetStaff)
-				staff.POST("/", staffHandler.CreateStaff)
-				staff.GET("/:id", staffHandler.GetStaffMember)
-				staff.PUT("/:id", staffHandler.UpdateStaff)
-				staff.DELETE("/:id", staffHandler.DeleteStaff)
-				staff.GET("/:id/performance", staffHandler.GetStaffPerformance)
-			}
-
-			// Customer routes
-			customers := protected.Group("/customers")
-			{
-				customers.GET("/", customerHandler.GetCustomers)
-				customers.POST("/", customerHandler.CreateCustomer)
-				customers.GET("/:id", customerHandler.GetCustomer)
-				customers.PUT("/:id", customerHandler.UpdateCustomer)
-				customers.DELETE("/:id", customerHandler.DeleteCustomer)
-			}
-
-			// Service routes
-			services := protected.Group("/services")
-			{
-				services.GET("/", serviceHandler.GetServices)
-				services.POST("/", serviceHandler.CreateService)
-				services.GET("/:id", serviceHandler.GetService)
-				services.PUT("/:id", serviceHandler.UpdateService)
-				services.DELETE("/:id", serviceHandler.DeleteService)
-			}
-
-			// Appointment routes
-			appointments := protected.Group("/appointments")
-			{
-				appointments.GET("/", appointmentHandler.GetAppointments)
-				appointments.POST("/", appointmentHandler.CreateAppointment)
-				appointments.GET("/:id", appointmentHandler.GetAppointment)
-				appointments.PUT("/:id", appointmentHandler.UpdateAppointment)
-				appointments.DELETE("/:id", appointmentHandler.DeleteAppointment)
-			}
-
-			// Analytics routes
-			analytics := protected.Group("/analytics")
-			{
-				analytics.GET("/dashboard", analyticsHandler.GetDashboard)
-				analytics.GET("/performance", analyticsHandler.GetPerformance)
-				analytics.GET("/goals", analyticsHandler.GetGoals)
-			}
-
-			// Subscription routes
-			subscriptions := protected.Group("/subscriptions")
-			{
-				subscriptions.GET("/", subscriptionHandler.GetSubscription)
-				subscriptions.PUT("/plan", subscriptionHandler.UpdatePlan)
-			}
-
-			// Billing routes
-			billing := protected.Group("/billing")
-			{
-				billing.GET("/", billingHandler.GetBills)
-				billing.GET("/:id", billingHandler.GetBill)
-				billing.POST("/:id/pay", billingHandler.PayBill)
-			}
+			authProtected.POST("/logout", authHandler.Logout)
+			authProtected.GET("/me", authHandler.GetProfile)
+			authProtected.PUT("/profile", authHandler.UpdateProfile)
+			authProtected.POST("/change-password", authHandler.ChangePassword)
 		}
+
+		// TODO: Add other protected routes here
+		// Protected routes for business management
+		// protected := v1.Group("")
+		// protected.Use(middleware.AuthMiddleware(logger))
+		// {
+		//     // Business routes
+		//     protected.GET("/business", businessHandler.GetBusiness)
+		//     protected.PUT("/business", businessHandler.UpdateBusiness)
+		//
+		//     // Branch routes
+		//     protected.GET("/branches", branchHandler.GetBranches)
+		//     protected.POST("/branches", branchHandler.CreateBranch)
+		//
+		//     // Staff routes
+		//     protected.GET("/staff", staffHandler.GetStaff)
+		//     protected.POST("/staff", staffHandler.CreateStaff)
+		//
+		//     // Customer routes
+		//     protected.GET("/customers", customerHandler.GetCustomers)
+		//     protected.POST("/customers", customerHandler.CreateCustomer)
+		//
+		//     // Service routes
+		//     protected.GET("/services", serviceHandler.GetServices)
+		//     protected.POST("/services", serviceHandler.CreateService)
+		//
+		//     // Appointment routes
+		//     protected.GET("/appointments", appointmentHandler.GetAppointments)
+		//     protected.POST("/appointments", appointmentHandler.CreateAppointment)
+		// }
 	}
 
-	// Swagger documentation
-	router.Static("/docs", "./docs")
-
-	// Start server
-	srv := &http.Server{
-		Addr:    fmt.Sprintf(":%s", cfg.Server.Port),
-		Handler: router,
-	}
-
-	// Graceful shutdown
-	go func() {
-		logger.Info(fmt.Sprintf("🚀 BeautyAI API Server starting on port %s", cfg.Server.Port))
-		logger.Info(fmt.Sprintf("📝 API Documentation: http://localhost:%s/docs", cfg.Server.Port))
-		logger.Info(fmt.Sprintf("🏥 Health Check: http://localhost:%s/health", cfg.Server.Port))
-		logger.Info(fmt.Sprintf("🌍 Environment: %s", cfg.App.Environment))
-
-		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			logger.Fatal("Failed to start server", zap.Error(err))
-		}
-	}()
-
-	// Wait for interrupt signal to gracefully shutdown
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-	<-quit
-
-	logger.Info("🛑 Shutting down server...")
-
-	// Graceful shutdown with timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
-
-	if err := srv.Shutdown(ctx); err != nil {
-		logger.Fatal("Server forced to shutdown", zap.Error(err))
-	}
-
-	logger.Info("✅ Server exited gracefully")
+	logger.Info("Routes configured successfully")
 }

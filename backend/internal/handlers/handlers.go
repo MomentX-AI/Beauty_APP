@@ -7,12 +7,7 @@ import (
 	"go.uber.org/zap"
 )
 
-// AuthHandler handles authentication related requests
-type AuthHandler struct {
-	db     database.Database
-	config *config.Config
-	logger *zap.Logger
-}
+// AuthHandler definition is in auth.go file
 
 // BusinessHandler handles business related requests
 type BusinessHandler struct {
@@ -78,9 +73,7 @@ type BillingHandler struct {
 }
 
 // Constructor functions
-func NewAuthHandler(db database.Database, config *config.Config, logger *zap.Logger) *AuthHandler {
-	return &AuthHandler{db: db, config: config, logger: logger}
-}
+// NewAuthHandler definition is in auth.go file
 
 func NewBusinessHandler(db database.Database, config *config.Config, logger *zap.Logger) *BusinessHandler {
 	return &BusinessHandler{db: db, config: config, logger: logger}
