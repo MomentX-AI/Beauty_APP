@@ -48,7 +48,7 @@ class AuthService {
       final responseData = jsonDecode(response.body);
       final authResponse = AuthResponse.fromJson(responseData);
 
-      if (response.statusCode == 201 && authResponse.success) {
+      if ((response.statusCode == 201 || response.statusCode == 200) && authResponse.success) {
         // 註冊成功，自動設置登入信息
         if (authResponse.data != null) {
           _currentUser = authResponse.data!.user;
@@ -145,10 +145,10 @@ class AuthService {
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
-        final authResponse = AuthResponse.fromJson(responseData);
         
-        if (authResponse.success && authResponse.data != null) {
-          _currentUser = authResponse.data!.user;
+        if (responseData['success'] == true && responseData['data'] != null) {
+          // /auth/me 端點直接返回用戶資料，不是包裹在 AuthData 中
+          _currentUser = User.fromJson(responseData['data']);
           return _currentUser;
         }
       } else if (response.statusCode == 401) {

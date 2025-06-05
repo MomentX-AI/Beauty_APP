@@ -17,6 +17,7 @@ BeautyAI 是一款專為美容沙龍和美容業者設計的全棧應用，提�
 - **API 文檔**: http://localhost:3001/swagger/index.html
 - **健康檢查**: http://localhost:3001/health
 - **基礎路徑**: `/api/v1`
+- **🔗 前後端串接指南**: [FRONTEND_BACKEND_INTEGRATION_GUIDE.md](FRONTEND_BACKEND_INTEGRATION_GUIDE.md)
 
 ### 已實作的 API 端點
 
@@ -204,6 +205,21 @@ docker-compose up --build
 - 優先技術支援
 
 ## 🔧 開發和測試
+
+### 📖 開發指南
+
+開發新功能時，請參考以下文檔：
+
+- 📖 **[前後端串接實作指南](FRONTEND_BACKEND_INTEGRATION_GUIDE.md)** - 完整開發流程
+- 🚀 **[快速參考卡片](QUICK_REFERENCE.md)** - 關鍵步驟和命令
+
+指南內容包含：
+- 環境設置步驟  
+- 後端 API 開發流程
+- 前端服務整合流程
+- 測試驗證方法
+- 常見問題解決方案
+- 最佳實務建議
 
 ### API 測試結果
 
